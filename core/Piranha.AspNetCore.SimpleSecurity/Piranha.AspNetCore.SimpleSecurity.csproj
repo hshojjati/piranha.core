@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
+	<NoWarn>$(NoWarn);CA1050</NoWarn>
     <RootNamespace>Piranha.AspNetCore</RootNamespace>
     <NoWarn>$(NoWarn);1591</NoWarn>
     <Description>Piranha CMS simple security provider for AspNetCore</Description>

@@ -65,7 +65,7 @@ namespace Piranha.AspNetCore
         /// <returns>If the user was signed in</returns>
         public async Task<bool> SignIn(object context, string username, string password)
         {
-            if (context is HttpContext)
+            if (context is HttpContext httpContext)
             {
                 if (Authenticate(username, password))
                 {
@@ -82,7 +82,7 @@ namespace Piranha.AspNetCore
                     var identity = new ClaimsIdentity(claims, user.Password);
                     var principle = new ClaimsPrincipal(identity);
 
-                    await ((HttpContext)context).SignInAsync("Piranha.SimpleSecurity", principle);
+                    await httpContext.SignInAsync("Piranha.SimpleSecurity", principle);
 
                     return true;
                 }
@@ -97,9 +97,9 @@ namespace Piranha.AspNetCore
         /// <param name="context">The current application context</param>
         public Task SignOut(object context)
         {
-            if (context is HttpContext)
+            if (context is HttpContext httpContext)
             {
-                return ((HttpContext)context).SignOutAsync("Piranha.SimpleSecurity");
+                return httpContext.SignOutAsync("Piranha.SimpleSecurity");
             }
             throw new ArgumentException("SimpleSecurity only works with a HttpContext");
         }
