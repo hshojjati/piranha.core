@@ -71,7 +71,8 @@ namespace Piranha.Services
         /// <returns>The model</returns>
         public async Task<Param> GetByKeyAsync(string key) {
             var id = _cache?.Get<Guid?>($"ParamKey_{key}");
-            Param model = null;
+
+            Param model;
 
             if (id.HasValue)
             {

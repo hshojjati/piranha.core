@@ -60,7 +60,7 @@ namespace Piranha.Services
         {
             var models = await _repo.GetAll();
 
-            if (models.Count() > 0)
+            if (models.Any())
             {
                 foreach (var model in models)
                 {
@@ -104,7 +104,7 @@ namespace Piranha.Services
         public async Task<Site> GetByInternalIdAsync(string internalId)
         {
             var id = _cache?.Get<Guid?>($"SiteId_{internalId}");
-            Site model = null;
+            Site model;
 
             if (id != null)
             {
@@ -236,9 +236,9 @@ namespace Piranha.Services
                 await OnLoadContentAsync(model).ConfigureAwait(false);
             }
 
-            if (model != null && model is T)
+            if (model != null && model is T typedModel)
             {
-                return (T)model;
+                return typedModel;
             }
             return null;
         }
@@ -514,7 +514,7 @@ namespace Piranha.Services
 
                 App.Hooks.OnLoad(model);
 
-                if (_cache != null && !(model is DynamicSiteContent))
+                if (_cache != null && model is not DynamicSiteContent)
                 {
                     _cache.Set($"SiteContent_{model.Id}", model);
                 }

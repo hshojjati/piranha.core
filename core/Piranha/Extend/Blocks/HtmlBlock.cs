@@ -10,6 +10,7 @@
 
 using System.Text.RegularExpressions;
 using Piranha.Extend.Fields;
+using System;
 
 namespace Piranha.Extend.Blocks
 {
@@ -36,7 +37,7 @@ namespace Piranha.Extend.Blocks
 
                 if (title.Length > 40)
                 {
-                    title = title.Substring(0, 40) + "...";
+                    title = string.Concat(title.AsSpan(0, 40), "...");
                 }
                 return title;
             }

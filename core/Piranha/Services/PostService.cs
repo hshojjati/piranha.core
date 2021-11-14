@@ -25,7 +25,6 @@ namespace Piranha.Services
         private readonly ISiteService _siteService;
         private readonly IPageService _pageService;
         private readonly IParamService _paramService;
-        private readonly IMediaService _mediaService;
         private readonly ICache _cache;
         private readonly ISearch _search;
 
@@ -37,18 +36,16 @@ namespace Piranha.Services
         /// <param name="siteService">The site service</param>
         /// <param name="pageService">The page service</param>
         /// <param name="paramService">The param service</param>
-        /// <param name="mediaService">The media service</param>
         /// <param name="cache">The optional model cache</param>
         /// <param name="search">The optional search service</param>
         public PostService(IPostRepository repo, IContentFactory factory, ISiteService siteService, IPageService pageService,
-            IParamService paramService, IMediaService mediaService, ICache cache = null, ISearch search = null)
+            IParamService paramService, ICache cache = null, ISearch search = null)
         {
             _repo = repo;
             _factory = factory;
             _siteService = siteService;
             _pageService = pageService;
             _paramService = paramService;
-            _mediaService = mediaService;
             _search = search;
 
             if ((int)App.CacheLevel > 2)
@@ -108,10 +105,9 @@ namespace Piranha.Services
             if (index.HasValue && !pageSize.HasValue)
             {
                 // No page size provided, use default archive size
-                using (var config = new Config(_paramService))
-                {
-                    pageSize = config.ArchivePageSize;
-                }
+                using var config = new Config(_paramService);
+
+                pageSize = config.ArchivePageSize;
             }
 
             var models = new List<T>();
@@ -345,7 +341,7 @@ namespace Piranha.Services
             {
                 if (typeof(T) == typeof(PostInfo))
                 {
-                    model = _cache?.Get<PostInfo>($"PostInfo_{postId.ToString()}");
+                    model = _cache?.Get<PostInfo>($"PostInfo_{postId}");
                 }
                 else if (!typeof(DynamicPost).IsAssignableFrom(typeof(T)))
                 {
@@ -365,9 +361,9 @@ namespace Piranha.Services
                 }
             }
 
-            if (model != null && model is T)
+            if (model != null && model is T typedModel)
             {
-                return (T)model;
+                return typedModel;
             }
             return null;
         }
@@ -570,14 +566,13 @@ namespace Piranha.Services
             // Ensure page size
             if (!pageSize.HasValue)
             {
-                using (var config = new Config(_paramService))
-                {
-                    pageSize = config.CommentsPageSize;
-                }
+                using var config = new Config(_paramService);
+
+                pageSize = config.CommentsPageSize;
             }
 
             // Get the comments
-            IEnumerable<Comment> comments = null;
+            IEnumerable<Comment> comments;
 
             if (onlyPending)
             {
@@ -651,7 +646,7 @@ namespace Piranha.Services
             }
             else
             {
-                throw new ArgumentException($"Could not find post with id { postId.ToString() }");
+                throw new ArgumentException($"Could not find post with id {postId}");
             }
         }
 
@@ -739,13 +734,12 @@ namespace Piranha.Services
                 }
                 else if (current != null && !isDraft)
                 {
-                    using (var config = new Config(_paramService))
-                    {
-                        // Save current as a revision before saving the model
-                        // and if a draft revision exists, remove it.
-                        await _repo.DeleteDraft(model.Id).ConfigureAwait(false);
-                        await _repo.CreateRevision(model.Id, config.PostRevisions).ConfigureAwait(false);
-                    }
+                    using var config = new Config(_paramService);
+
+                    // Save current as a revision before saving the model
+                    // and if a draft revision exists, remove it.
+                    await _repo.DeleteDraft(model.Id).ConfigureAwait(false);
+                    await _repo.CreateRevision(model.Id, config.PostRevisions).ConfigureAwait(false);
                 }
 
                 // Save the main post
@@ -854,7 +848,7 @@ namespace Piranha.Services
             }
             else
             {
-                throw new ArgumentException($"Could not find post with id { model.ContentId.ToString() }");
+                throw new ArgumentException($"Could not find post with id {model.ContentId}");
             }
         }
 
@@ -871,7 +865,7 @@ namespace Piranha.Services
 
             if (typeof(T) == typeof(PostInfo))
             {
-                model = _cache?.Get<PostInfo>($"PostInfo_{id.ToString()}");
+                model = _cache?.Get<PostInfo>($"PostInfo_{id}");
             }
             else if (!typeof(DynamicPost).IsAssignableFrom(typeof(T)))
             {
@@ -901,9 +895,9 @@ namespace Piranha.Services
                 }
             }
 
-            if (model != null && model is T)
+            if (model != null && model is T typedModel)
             {
-                return (T)model;
+                return typedModel;
             }
             return null;
         }
@@ -976,11 +970,11 @@ namespace Piranha.Services
                 App.Hooks.OnLoad(model);
 
                 // Never cache drafts, dynamic or simple instances
-                if (!isDraft && _cache != null && !(model is DynamicPost))
+                if (!isDraft && _cache != null && model is not DynamicPost)
                 {
                     if (model is PostInfo)
                     {
-                        _cache.Set($"PostInfo_{model.Id.ToString()}", model);
+                        _cache.Set($"PostInfo_{model.Id}", model);
                     }
                     else
                     {
@@ -1001,7 +995,7 @@ namespace Piranha.Services
             {
                 _cache.Remove(post.Id.ToString());
                 _cache.Remove($"PostId_{post.BlogId}_{post.Slug}");
-                _cache.Remove($"PostInfo_{post.Id.ToString()}");
+                _cache.Remove($"PostInfo_{post.Id}");
             }
         }
 
@@ -1010,7 +1004,7 @@ namespace Piranha.Services
         /// </summary>
         /// <param name="model">The posts model</param>
         /// <returns>If the post is published</returns>
-        private bool IsPublished (PostBase model)
+        private static bool IsPublished (PostBase model)
         {
             return model != null && model.Published.HasValue && model.Published.Value <= DateTime.Now;
         }
@@ -1020,7 +1014,7 @@ namespace Piranha.Services
         /// </summary>
         /// <param name="model">The post model</param>
         /// <returns>If the post is scheduled</returns>
-        private bool IsScheduled(PostBase model)
+        private static bool IsScheduled(PostBase model)
         {
             return model != null && model.Published.HasValue && model.Published.Value > DateTime.Now;
         }

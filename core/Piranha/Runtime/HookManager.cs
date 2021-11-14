@@ -10,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Piranha.Models;
 
 namespace Piranha.Runtime
@@ -104,6 +105,7 @@ namespace Piranha.Runtime
             /// the cache.
             /// </summary>
             /// <param name="hook">The hook</param>
+            [SuppressMessage("Ignored", "CA1822", Justification = "Public API")]
             public void RegisterOnLoad(ModelDelegate<Sitemap> hook)
             {
                 App.Hooks.RegisterOnLoad(hook);
@@ -114,6 +116,7 @@ namespace Piranha.Runtime
             /// is invalidated due to a change in the site structure.
             /// </summary>
             /// <param name="hook">The hook</param>
+            [SuppressMessage("Ignored", "CA1822", Justification = "Public API")]
             public void RegisterOnInvalidate(ModelDelegate<Sitemap> hook)
             {
                 App.Hooks.RegisterOnBeforeDelete(hook);
@@ -123,12 +126,12 @@ namespace Piranha.Runtime
         //
         // Private hook collections.
         //
-        private readonly Dictionary<Type, object> _onLoad = new Dictionary<Type, object>();
-        private readonly Dictionary<Type, object> _onBeforeSave = new Dictionary<Type, object>();
-        private readonly Dictionary<Type, object> _onValidate = new Dictionary<Type, object>();
-        private readonly Dictionary<Type, object> _onAfterSave = new Dictionary<Type, object>();
-        private readonly Dictionary<Type, object> _onBeforeDelete = new Dictionary<Type, object>();
-        private readonly Dictionary<Type, object> _onAfterDelete = new Dictionary<Type, object>();
+        private readonly Dictionary<Type, object> _onLoad = new();
+        private readonly Dictionary<Type, object> _onBeforeSave = new();
+        private readonly Dictionary<Type, object> _onValidate = new();
+        private readonly Dictionary<Type, object> _onAfterSave = new();
+        private readonly Dictionary<Type, object> _onBeforeDelete = new();
+        private readonly Dictionary<Type, object> _onAfterDelete = new();
 
         /// <summary>
         /// Delegate for repository events.

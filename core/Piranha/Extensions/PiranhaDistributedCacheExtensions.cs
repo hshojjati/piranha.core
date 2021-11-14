@@ -39,9 +39,8 @@ public static class PiranhaDistributedCacheExtensions
     /// Uses the distributed cache service in the current application.
     /// </summary>
     /// <param name="serviceBuilder">The current service builder</param>
-    /// <param name="clone">If returned objects should be cloned</param>
     /// <returns>The updated service builder</returns>
-    public static PiranhaServiceBuilder UseDistributedCache(this PiranhaServiceBuilder serviceBuilder, bool clone = false)
+    public static PiranhaServiceBuilder UseDistributedCache(this PiranhaServiceBuilder serviceBuilder)
     {
         serviceBuilder.Services.AddPiranhaDistributedCache();
 

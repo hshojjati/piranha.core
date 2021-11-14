@@ -107,12 +107,12 @@ namespace Piranha.Extend.Fields
         /// <returns>True if the fields are equal</returns>
         public static bool operator ==(MediaFieldBase<T> field1, MediaFieldBase<T> field2)
         {
-            if ((object)field1 != null && (object)field2 != null)
+            if (field1 is not null && field2 is not null)
             {
                 return field1.Equals(field2);
             }
 
-            if ((object)field1 == null && (object)field2 == null)
+            if (field1 is null && field2 is null)
             {
                 return true;
             }

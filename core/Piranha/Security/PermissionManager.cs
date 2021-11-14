@@ -18,7 +18,7 @@ namespace Piranha.Security
     /// </summary>
     public class PermissionManager
     {
-        private readonly Dictionary<string, IList<PermissionItem>> _modules = new Dictionary<string, IList<PermissionItem>>();
+        private readonly Dictionary<string, IList<PermissionItem>> _modules = new();
 
         /// <summary>
         /// Gets the permission items for the given module.

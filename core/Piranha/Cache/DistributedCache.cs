@@ -48,7 +48,7 @@ namespace Piranha.Cache
             {
                 return JsonConvert.DeserializeObject<T>(json, _jsonSettings);
             }
-            return default(T);
+            return default;
         }
 
         /// <summary>

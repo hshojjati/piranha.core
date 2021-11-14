@@ -442,7 +442,7 @@ namespace Piranha
 
                 // Ensure trailing slash
                 if (!string.IsNullOrWhiteSpace(value) && !value.EndsWith("/"))
-                    value = value + "/";
+                    value += "/";
 
                 param.Value = value;
                 _service.SaveAsync(param).GetAwaiter().GetResult();

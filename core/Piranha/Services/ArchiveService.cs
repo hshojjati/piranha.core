@@ -75,16 +75,15 @@ namespace Piranha.Services
             // Ensure page size
             if (!pageSize.HasValue)
             {
-                using (var config = new Config(_paramService))
-                {
-                    // No page size provided, get from config
-                    pageSize = config.ArchivePageSize;
+                using var config = new Config(_paramService);
 
-                    if (!pageSize.HasValue || pageSize == 0)
-                    {
-                        // No config available, default to 5
-                        pageSize = 5;
-                    }
+                // No page size provided, get from config
+                pageSize = config.ArchivePageSize;
+
+                if (!pageSize.HasValue || pageSize == 0)
+                {
+                    // No config available, default to 5
+                    pageSize = 5;
                 }
             }
 
@@ -95,7 +94,7 @@ namespace Piranha.Services
             // Get paging info
             model.TotalPosts = await _repo.GetPostCount(archiveId, categoryId, tagId, year, month).ConfigureAwait(false);
             model.TotalPages = Math.Max(Convert.ToInt32(Math.Ceiling((double)model.TotalPosts / pageSize.Value)), 1);
-            model.CurrentPage = Math.Min(Math.Max(1, currentPage.HasValue ? currentPage.Value : 1), model.TotalPages);
+            model.CurrentPage = Math.Min(Math.Max(1, currentPage ?? 1), model.TotalPages);
 
             // Set related info
             if (categoryId.HasValue)

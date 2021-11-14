@@ -27,7 +27,7 @@ namespace Piranha.Services
         private readonly IStorage _storage;
         private readonly IImageProcessor _processor;
         private readonly ICache _cache;
-        private static readonly object ScaleMutex = new object();
+        private static readonly object ScaleMutex = new();
         private const string MEDIA_STRUCTURE = "MediaStructure";
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace Piranha.Services
         }
 
         //Separated this into its own thing in case it needed to get reused elsewhere.
-        private async Task<IEnumerable<Media>> _getFast(IEnumerable<Guid> ids)
+        private async Task<IEnumerable<Media>> GetFast(IEnumerable<Guid> ids)
         {
             var guids = ids as Guid[] ?? ids.ToArray();
             var partial = (_cache != null ? guids.Select(c => _cache.Get<Media>(c.ToString())) : Enumerable.Empty<Media>()).Where(c => c != null).ToArray();
@@ -68,7 +68,7 @@ namespace Piranha.Services
         /// <returns>The available media</returns>
         public Task<IEnumerable<Media>> GetAllByFolderIdAsync(Guid? folderId = null)
         {
-            return _repo.GetAll(folderId).ContinueWith(t => _getFast(t.Result.ToArray())).Unwrap();
+            return _repo.GetAll(folderId).ContinueWith(t => GetFast(t.Result.ToArray())).Unwrap();
         }
 
         /// <inheritdoc cref="IMediaService.CountFolderItemsAsync"/>
@@ -222,22 +222,21 @@ namespace Piranha.Services
             }
             else
             {
-                using (var session = await _storage.OpenAsync().ConfigureAwait(false))
-                {
-                    // Delete all versions as we're updating the image
-                    if (model.Versions.Count > 0)
-                    {
-                        foreach (var version in model.Versions)
-                        {
-                            // Delete version from storage
-                            await session.DeleteAsync(model, GetResourceName(model, version.Width, version.Height, version.FileExtension)).ConfigureAwait(false);
-                        }
-                        model.Versions.Clear();
-                    }
+                using var session = await _storage.OpenAsync().ConfigureAwait(false);
 
-                    // Delete the old file because we might have a different filename
-                    await session.DeleteAsync(model, GetResourceName(model)).ConfigureAwait(false);
+                // Delete all versions as we're updating the image
+                if (model.Versions.Count > 0)
+                {
+                    foreach (var version in model.Versions)
+                    {
+                        // Delete version from storage
+                        await session.DeleteAsync(model, GetResourceName(model, version.Width, version.Height, version.FileExtension)).ConfigureAwait(false);
+                    }
+                    model.Versions.Clear();
                 }
+
+                // Delete the old file because we might have a different filename
+                await session.DeleteAsync(model, GetResourceName(model)).ConfigureAwait(false);
             }
 
             var type = App.MediaTypes.GetItem(content.Filename);
@@ -385,72 +384,68 @@ namespace Piranha.Services
                     : GetPublicUrl(media, width, height, version.FileExtension);
 
             // Get the image file
-            using (var stream = new MemoryStream())
+            using var stream = new MemoryStream();
+            using var session = await _storage.OpenAsync().ConfigureAwait(false);
+
+            if (!await session.GetAsync(media, media.Filename, stream).ConfigureAwait(false))
             {
-                using (var session = await _storage.OpenAsync().ConfigureAwait(false))
+                return null;
+            }
+
+            // Reset strem position
+            stream.Position = 0;
+
+            using var output = new MemoryStream();
+
+            if (height.HasValue)
+            {
+                _processor.CropScale(stream, output, width, height.Value);
+            }
+            else
+            {
+                _processor.Scale(stream, output, width);
+            }
+            output.Position = 0;
+            bool upload = false;
+
+            lock (ScaleMutex)
+            {
+                // We have to make sure we don't scale multiple files
+                // at the same time as it can create index violations.
+                version = query.FirstOrDefault();
+
+                if (version == null)
                 {
-                    if (!await session.GetAsync(media, media.Filename, stream).ConfigureAwait(false))
+                    var info = new FileInfo(media.Filename);
+
+                    version = new MediaVersion
                     {
-                        return null;
-                    }
+                        Id = Guid.NewGuid(),
+                        Size = output.Length,
+                        Width = width,
+                        Height = height,
+                        FileExtension = info.Extension
+                    };
+                    media.Versions.Add(version);
 
-                    // Reset strem position
-                    stream.Position = 0;
+                    _repo.Save(media).Wait();
+                    RemoveFromCache(media);
 
-                    using (var output = new MemoryStream())
-                    {
-                        if (height.HasValue)
-                        {
-                            _processor.CropScale(stream, output, width, height.Value);
-                        }
-                        else
-                        {
-                            _processor.Scale(stream, output, width);
-                        }
-                        output.Position = 0;
-                        bool upload = false;
-
-                        lock (ScaleMutex)
-                        {
-                            // We have to make sure we don't scale multiple files
-                            // at the same time as it can create index violations.
-                            version = query.FirstOrDefault();
-
-                            if (version == null)
-                            {
-                                var info = new FileInfo(media.Filename);
-
-                                version = new MediaVersion
-                                {
-                                    Id = Guid.NewGuid(),
-                                    Size = output.Length,
-                                    Width = width,
-                                    Height = height,
-                                    FileExtension = info.Extension
-                                };
-                                media.Versions.Add(version);
-
-                                _repo.Save(media).Wait();
-                                RemoveFromCache(media);
-
-                                upload = true;
-                            }
-                        }
-
-                        if (upload)
-                        {
-                            await session.PutAsync(media, GetResourceName(media, width, height), media.ContentType,
-                                    output).ConfigureAwait(false);
-
-                            var info = new FileInfo(media.Filename);
-                            return GetPublicUrl(media, width, height, info.Extension);
-                        }
-                        //When moving this out of its parent method, realized that if the mutex failed, it would just fall back to the null instead of trying to return the issue.
-                        //Added this to ensure that queries didn't just give up if they weren't the first to the party.
-                        return GetPublicUrl(media, width, height, version.FileExtension);
-                    }
+                    upload = true;
                 }
             }
+
+            if (upload)
+            {
+                await session.PutAsync(media, GetResourceName(media, width, height), media.ContentType,
+                        output).ConfigureAwait(false);
+
+                var info = new FileInfo(media.Filename);
+                return GetPublicUrl(media, width, height, info.Extension);
+            }
+            //When moving this out of its parent method, realized that if the mutex failed, it would just fall back to the null instead of trying to return the issue.
+            //Added this to ensure that queries didn't just give up if they weren't the first to the party.
+            return GetPublicUrl(media, width, height, version.FileExtension);
             // If the requested size is equal to the original size, return true
         }
 
@@ -613,17 +608,10 @@ namespace Piranha.Services
         /// <param name="height">Optional requested height</param>
         /// <param name="extension">Optional requested extension</param>
         /// <returns>The name</returns>
-        private string GetResourceName(Media media, int? width = null, int? height = null, string extension = null)
+        private static string GetResourceName(Media media, int? width = null, int? height = null, string extension = null)
         {
             var filename = new FileInfo(media.Filename);
             var sb = new StringBuilder();
-
-            //
-            // This is now handled in the provider
-            //
-            // sb.Append(media.Id);
-            // sb.Append("-");
-            //
 
             if (width.HasValue)
             {
@@ -632,7 +620,7 @@ namespace Piranha.Services
 
                 if (height.HasValue)
                 {
-                    sb.Append("x");
+                    sb.Append('x');
                     sb.Append(height.Value);
                 }
             }
@@ -664,16 +652,15 @@ namespace Piranha.Services
         {
             var name = GetResourceName(media, width, height, extension);
 
-            using (var config = new Config(_paramService))
-            {
-                var cdn = config.MediaCDN;
+            using var config = new Config(_paramService);
 
-                if (!string.IsNullOrWhiteSpace(cdn))
-                {
-                    return cdn + _storage.GetResourceName(media, name);
-                }
-                return _storage.GetPublicUrl(media, name);
+            var cdn = config.MediaCDN;
+
+            if (!string.IsNullOrWhiteSpace(cdn))
+            {
+                return cdn + _storage.GetResourceName(media, name);
             }
+            return _storage.GetPublicUrl(media, name);
         }
 
         /// <summary>

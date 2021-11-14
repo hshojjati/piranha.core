@@ -23,12 +23,12 @@ namespace Piranha.Extend.Fields
         /// <summary>
         /// The static list of available items.
         /// </summary>
-        private static readonly List<SelectFieldItem> _items = new List<SelectFieldItem>();
+        private static readonly List<SelectFieldItem> _items = new();
 
         /// <summary>
         /// Initialization mutex.
         /// </summary>
-        private static readonly object Mutex = new object();
+        private static readonly object Mutex = new();
 
         /// <summary>
         /// The initialization state.
@@ -133,12 +133,12 @@ namespace Piranha.Extend.Fields
         /// <returns>True if the fields are equal</returns>
         public static bool operator ==(SelectField<T> field1, SelectField<T> field2)
         {
-            if ((object)field1 != null && (object)field2 != null)
+            if (field1 is not null && field2 is not null)
             {
                 return field1.Equals(field2);
             }
 
-            if ((object)field1 == null && (object)field2 == null)
+            if (field1 is null && field2 is null)
             {
                 return true;
             }
@@ -163,7 +163,7 @@ namespace Piranha.Extend.Fields
         /// </summary>
         /// <param name="val">The enum value</param>
         /// <returns>The display title</returns>
-        private string GetEnumTitle(Enum val)
+        private static string GetEnumTitle(Enum val)
         {
             var members = typeof(T).GetMember(val.ToString());
 
@@ -173,9 +173,9 @@ namespace Piranha.Extend.Fields
 
                 foreach (var attr in attrs)
                 {
-                    if (attr is DisplayAttribute)
+                    if (attr is DisplayAttribute displayAttr)
                     {
-                        return ((DisplayAttribute)attr).Description;
+                        return displayAttr.Description;
                     }
                 }
             }
@@ -185,7 +185,7 @@ namespace Piranha.Extend.Fields
         /// <summary>
         /// Initializes the meta data needed in the manager interface.
         /// </summary>
-        private void InitMetaData()
+        private static void InitMetaData()
         {
             if (IsInitialized)
                 return;

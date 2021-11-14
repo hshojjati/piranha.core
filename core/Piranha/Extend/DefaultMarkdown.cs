@@ -21,7 +21,7 @@ namespace Piranha.Extend
         /// Gets/sets the additional pipeline to use
         /// for markdown transformation.
         /// </summary>
-        public MarkdownPipeline _pipeline { get; set; }
+        public MarkdownPipeline Pipeline { get; set; }
 
         /// <summary>
         /// Transforms the given markdown string to html.
@@ -32,7 +32,7 @@ namespace Piranha.Extend
         {
             if (!string.IsNullOrEmpty(md))
             {
-                return Markdown.ToHtml(md, _pipeline);
+                return Markdown.ToHtml(md, Pipeline);
             }
             return md;
         }

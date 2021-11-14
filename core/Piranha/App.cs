@@ -31,7 +31,7 @@ namespace Piranha
         /// <summary>
         /// Mutex for thread safe initialization.
         /// </summary>
-        private static readonly object _mutex = new object();
+        private static readonly object _mutex = new();
 
         /// <summary>
         /// If the app has been initialized.

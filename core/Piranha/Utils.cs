@@ -38,7 +38,7 @@ namespace Piranha
         /// <returns>The new array</returns>
         public static T[] Subset<T>(this T[] arr, int startpos = 0, int length = 0)
         {
-            List<T> tmp = new List<T>();
+            List<T> tmp = new();
 
             length = length > 0 ? length : arr.Length - startpos;
 
@@ -108,9 +108,9 @@ namespace Piranha
 
             // Remove leading & trailing dashes
             if (slug.EndsWith("-"))
-                slug = slug.Substring(0, slug.LastIndexOf("-"));
+                slug = slug[..slug.LastIndexOf("-")];
             if (slug.StartsWith("-"))
-                slug = slug.Substring(Math.Min(slug.IndexOf("-") + 1, slug.Length));
+                slug = slug[Math.Min(slug.IndexOf("-") + 1, slug.Length)..];
             return slug;
         }
 
@@ -135,12 +135,11 @@ namespace Piranha
         {
             var encoding = new UTF8Encoding();
 
-            using (var crypto = MD5.Create())
-            {
-                var str = name + date.ToString("yyyy-MM-dd HH:mm:ss");
-                var bytes = crypto.ComputeHash(encoding.GetBytes(str));
-                return $"\"{Convert.ToBase64String(bytes)}\"";
-            }
+            using var crypto = MD5.Create();
+
+            var str = name + date.ToString("yyyy-MM-dd HH:mm:ss");
+            var bytes = crypto.ComputeHash(encoding.GetBytes(str));
+            return $"\"{Convert.ToBase64String(bytes)}\"";
         }
 
         /// <summary>
@@ -151,18 +150,17 @@ namespace Piranha
         /// <returns>The gravatar URL</returns>
         public static string GenerateGravatarUrl(string email, int size = 0)
         {
-            using (var md5 = MD5.Create())
-            {
-                var bytes = md5.ComputeHash(Encoding.UTF8.GetBytes(email));
+            using var md5 = MD5.Create();
 
-                var sb = new StringBuilder(bytes.Length * 2);
-                for (var n = 0; n < bytes.Length; n++)
-                {
-                    sb.Append(bytes[n].ToString("X2"));
-                }
-                return "https://www.gravatar.com/avatar/" + sb.ToString().ToLower() +
-                       (size > 0 ? "?s=" + size : "");
+            var bytes = md5.ComputeHash(Encoding.UTF8.GetBytes(email));
+
+            var sb = new StringBuilder(bytes.Length * 2);
+            for (var n = 0; n < bytes.Length; n++)
+            {
+                sb.Append(bytes[n].ToString("X2"));
             }
+            return "https://www.gravatar.com/avatar/" + sb.ToString().ToLower() +
+                   (size > 0 ? "?s=" + size : "");
         }
 
         /// <summary>
@@ -194,7 +192,7 @@ namespace Piranha
         /// <returns>The first paragraph</returns>
         public static string FirstParagraph(string str)
         {
-            Regex reg = new Regex("<p[^>]*>.*?</p>");
+            var reg = new Regex("<p[^>]*>.*?</p>");
             var matches = reg.Matches(str);
 
             return matches.Count > 0 ? matches[0].Value : "";
@@ -207,7 +205,7 @@ namespace Piranha
         /// <returns>The first paragraph</returns>
         public static string FirstParagraph(Extend.Fields.MarkdownField md)
         {
-            Regex reg = new Regex("<p[^>]*>.*?</p>");
+            var reg = new Regex("<p[^>]*>.*?</p>");
             var matches = reg.Matches(md.ToHtml());
 
             return matches.Count > 0 ? matches[0].Value : "";
@@ -220,7 +218,7 @@ namespace Piranha
         /// <returns>The first paragraph</returns>
         public static string FirstParagraph(Extend.Fields.HtmlField html)
         {
-            Regex reg = new Regex("<p[^>]*>.*?</p>");
+            var reg = new Regex("<p[^>]*>.*?</p>");
             var matches = reg.Matches(html.Value);
 
             return matches.Count > 0 ? matches[0].Value : "";
@@ -261,7 +259,7 @@ namespace Piranha
             if (obj == null)
             {
                 // Null value does not need to be cloned.
-                return default(T);
+                return default;
             }
 
             if (obj is ValueType)
@@ -360,7 +358,7 @@ namespace Piranha
                 {
                     if (settings.TryGetValue(setting.Name, out var existing))
                     {
-                        if (!(existing is IList))
+                        if (existing is not IList)
                         {
                             existing = new ArrayList()
                             {

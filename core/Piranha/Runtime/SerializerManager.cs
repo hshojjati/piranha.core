@@ -28,9 +28,7 @@ namespace Piranha.Runtime
         {
             get
             {
-                ISerializer serializer = null;
-
-                if (_serializers.TryGetValue(type, out serializer))
+                if (_serializers.TryGetValue(type, out var serializer))
                 {
                     return serializer;
                 }

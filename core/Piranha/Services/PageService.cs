@@ -24,7 +24,6 @@ namespace Piranha.Services
         private readonly IContentFactory _factory;
         private readonly ISiteService _siteService;
         private readonly IParamService _paramService;
-        private readonly IMediaService _mediaService;
         private readonly ICache _cache;
         private readonly ISearch _search;
 
@@ -35,17 +34,15 @@ namespace Piranha.Services
         /// <param name="factory">The content facory</param>
         /// <param name="siteService">The site service</param>
         /// <param name="paramService">The param service</param>
-        /// <param name="mediaService">The media service</param>
         /// <param name="cache">The optional model cache</param>
         /// <param name="search">The optional content search</param>
         public PageService(IPageRepository repo, IContentFactory factory, ISiteService siteService,
-            IParamService paramService, IMediaService mediaService, ICache cache = null, ISearch search = null)
+            IParamService paramService, ICache cache = null, ISearch search = null)
         {
             _repo = repo;
             _factory = factory;
             _siteService = siteService;
             _paramService = paramService;
-            _mediaService = mediaService;
             _search = search;
 
             if ((int)App.CacheLevel > 2)
@@ -121,9 +118,9 @@ namespace Piranha.Services
             {
                 pageBlock.Id = Guid.Empty;
 
-                if (pageBlock is Extend.BlockGroup)
+                if (pageBlock is Extend.BlockGroup blockGroup)
                 {
-                    foreach (var childBlock in ((Extend.BlockGroup)pageBlock).Items)
+                    foreach (var childBlock in blockGroup.Items)
                     {
                         childBlock.Id = Guid.Empty;
                     }
@@ -279,9 +276,9 @@ namespace Piranha.Services
                 await OnLoadAsync(model).ConfigureAwait(false);
             }
 
-            if (model != null && model is T)
+            if (model != null && model is T typedModel)
             {
-                return await MapOriginalAsync((T)model).ConfigureAwait(false);
+                return await MapOriginalAsync(typedModel).ConfigureAwait(false);
             }
             return null;
         }
@@ -323,7 +320,7 @@ namespace Piranha.Services
 
                 if (typeof(T) == typeof(Models.PageInfo))
                 {
-                    model = _cache?.Get<PageInfo>($"PageInfo_{id.ToString()}");
+                    model = _cache?.Get<PageInfo>($"PageInfo_{ id }");
                 }
                 else if (!typeof(DynamicPage).IsAssignableFrom(typeof(T)))
                 {
@@ -339,9 +336,9 @@ namespace Piranha.Services
                 {
                     notCached.Add(id);
                 }
-                else if (model is T)
+                else if (model is T typedModel)
                 {
-                    ret.Add(await MapOriginalAsync((T)model).ConfigureAwait(false));
+                    ret.Add(await MapOriginalAsync(typedModel).ConfigureAwait(false));
                 }
             }
 
@@ -351,10 +348,10 @@ namespace Piranha.Services
             {
                 var models = await _repo.GetByIds<T>(notCached.ToArray()).ConfigureAwait(false);
 
-                foreach (var model in models.Where(m => m is T))
+                foreach (var model in models.Where(m => m is T typedModel))
                 {
                     await OnLoadAsync(model).ConfigureAwait(false);
-                    ret.Add(await MapOriginalAsync((T)model).ConfigureAwait(false));
+                    ret.Add(await MapOriginalAsync(model).ConfigureAwait(false));
                 }
             }
 
@@ -403,7 +400,7 @@ namespace Piranha.Services
             {
                 if (typeof(T) == typeof(Models.PageInfo))
                 {
-                    model = _cache?.Get<PageInfo>($"PageInfo_{pageId.ToString()}");
+                    model = _cache?.Get<PageInfo>($"PageInfo_{ pageId }");
                 }
                 else if (!typeof(DynamicPage).IsAssignableFrom(typeof(T)))
                 {
@@ -423,9 +420,9 @@ namespace Piranha.Services
                 await OnLoadAsync(model).ConfigureAwait(false);
             }
 
-            if (model != null && model is T)
+            if (model != null && model is T typedModel)
             {
-                return await MapOriginalAsync((T)model).ConfigureAwait(false);
+                return await MapOriginalAsync(typedModel).ConfigureAwait(false);
             }
             return null;
         }
@@ -561,14 +558,13 @@ namespace Piranha.Services
             // Ensure page size
             if (!pageSize.HasValue)
             {
-                using (var config = new Config(_paramService))
-                {
-                    pageSize = config.CommentsPageSize;
-                }
+                using var config = new Config(_paramService);
+
+                pageSize = config.CommentsPageSize;
             }
 
             // Get the comments
-            IEnumerable<Comment> comments = null;
+            IEnumerable<Comment> comments;
 
             if (onlyPending)
             {
@@ -624,19 +620,18 @@ namespace Piranha.Services
                 var prefix = "";
 
                 // Check if we should generate hierarchical slugs
-                using (var config = new Config(_paramService))
-                {
-                    if (config.HierarchicalPageSlugs && model.ParentId.HasValue)
-                    {
-                        var parentSlug = (await GetByIdAsync<PageInfo>(model.ParentId.Value).ConfigureAwait(false))?.Slug;
+                using var config = new Config(_paramService);
 
-                        if (!string.IsNullOrWhiteSpace(parentSlug))
-                        {
-                            prefix = parentSlug + "/";
-                        }
+                if (config.HierarchicalPageSlugs && model.ParentId.HasValue)
+                {
+                    var parentSlug = (await GetByIdAsync<PageInfo>(model.ParentId.Value).ConfigureAwait(false))?.Slug;
+
+                    if (!string.IsNullOrWhiteSpace(parentSlug))
+                    {
+                        prefix = parentSlug + "/";
                     }
-                    model.Slug = prefix + Utils.GenerateSlug(!string.IsNullOrWhiteSpace(model.NavigationTitle) ? model.NavigationTitle : model.Title);
                 }
+                model.Slug = prefix + Utils.GenerateSlug(!string.IsNullOrWhiteSpace(model.NavigationTitle) ? model.NavigationTitle : model.Title);
             }
             else
             {
@@ -661,7 +656,7 @@ namespace Piranha.Services
             var current = await _repo.GetById<PageInfo>(model.Id).ConfigureAwait(false);
             var changeState = IsPublished(current) != IsPublished(model);
 
-            IEnumerable<Guid> affected = new Guid[0];
+            IEnumerable<Guid> affected = Array.Empty<Guid>();
 
             // Call before save hook
             App.Hooks.OnBeforeSave<PageBase>(model);
@@ -684,13 +679,12 @@ namespace Piranha.Services
                 }
                 else if (current != null && !isDraft)
                 {
-                    using (var config = new Config(_paramService))
-                    {
-                        // Save current as a revision before saving the model
-                        // and if a draft revision exists, remove it.
-                        await _repo.DeleteDraft(model.Id).ConfigureAwait(false);
-                        await _repo.CreateRevision(model.Id, config.PageRevisions).ConfigureAwait(false);
-                    }
+                    using var config = new Config(_paramService);
+
+                    // Save current as a revision before saving the model
+                    // and if a draft revision exists, remove it.
+                    await _repo.DeleteDraft(model.Id).ConfigureAwait(false);
+                    await _repo.CreateRevision(model.Id, config.PageRevisions).ConfigureAwait(false);
                 }
 
                 // Save the main page
@@ -723,7 +717,7 @@ namespace Piranha.Services
             }
 
             // Invalidate sitemap if any other pages were affected
-            if (changeState || affected.Count() > 0)
+            if (changeState || affected.Any())
             {
                 await _siteService.InvalidateSitemapAsync(model.SiteId).ConfigureAwait(false);
             }
@@ -804,7 +798,7 @@ namespace Piranha.Services
             }
             else
             {
-                throw new ArgumentException($"Could not find page with id { pageId.ToString() }");
+                throw new ArgumentException($"Could not find page with id { pageId }");
             }
         }
 
@@ -879,7 +873,7 @@ namespace Piranha.Services
             }
             else
             {
-                throw new ArgumentException($"Could not find page with id { model.ContentId.ToString() }");
+                throw new ArgumentException($"Could not find page with id { model.ContentId }");
             }
         }
 
@@ -901,7 +895,7 @@ namespace Piranha.Services
 
             if (original != null)
             {
-                T copy = null;
+                T copy;
 
                 if (model is DynamicPage)
                 {
@@ -1003,11 +997,11 @@ namespace Piranha.Services
                 App.Hooks.OnLoad(model);
 
                 // Never cache drafts, dynamic or simple instances
-                if (!isDraft && _cache != null && !(model is DynamicPage))
+                if (!isDraft && _cache != null && model is not DynamicPage)
                 {
                     if (model is PageInfo)
                     {
-                        _cache.Set($"PageInfo_{model.Id.ToString()}", model);
+                        _cache.Set($"PageInfo_{model.Id}", model);
                     }
                     else
                     {
@@ -1038,7 +1032,7 @@ namespace Piranha.Services
             if (_cache != null)
             {
                 _cache.Remove(model.Id.ToString());
-                _cache.Remove($"PageInfo_{model.Id.ToString()}");
+                _cache.Remove($"PageInfo_{model.Id}");
                 _cache.Remove($"PageId_{model.SiteId}_{model.Slug}");
                 if (!model.ParentId.HasValue && model.SortOrder == 0)
                 {
@@ -1056,7 +1050,7 @@ namespace Piranha.Services
         /// </summary>
         /// <param name="model">The page model</param>
         /// <returns>If the page is published</returns>
-        private bool IsPublished(PageBase model)
+        private static bool IsPublished(PageBase model)
         {
             return model != null && model.Published.HasValue && model.Published.Value <= DateTime.Now;
         }
@@ -1066,7 +1060,7 @@ namespace Piranha.Services
         /// </summary>
         /// <param name="model">The page model</param>
         /// <returns>If the page is scheduled</returns>
-        private bool IsScheduled(PageBase model)
+        private static bool IsScheduled(PageBase model)
         {
             return model != null && model.Published.HasValue && model.Published.Value > DateTime.Now;
         }

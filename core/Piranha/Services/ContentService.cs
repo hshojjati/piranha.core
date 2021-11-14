@@ -126,13 +126,13 @@ namespace Piranha.Services
         /// <returns>The content model</returns>
         public async Task<T> GetByIdAsync<T>(Guid id, Guid? languageId = null) where T : GenericContent
         {
-            T model = null;
-
             // Make sure we have a language id
             if (languageId == null)
             {
                 languageId = (await _langService.GetDefaultAsync())?.Id;
             }
+
+            T model;
 
             // First, try to get the model from cache
             if (typeof(IDynamicContent).IsAssignableFrom(typeof(T)))
@@ -167,7 +167,7 @@ namespace Piranha.Services
 
             // Check that we got back the requested type from the
             // repository
-            if (model != null && model is T)
+            if (model != null)
             {
                 return model;
             }
@@ -343,7 +343,7 @@ namespace Piranha.Services
                 // Store the model
                 if (model is IDynamicContent)
                 {
-                    _cache.Set($"DynamicContent_{ model.Id.ToString() }", model);
+                    _cache.Set($"DynamicContent_{ model.Id }", model);
                 }
                 else
                 {
@@ -363,7 +363,7 @@ namespace Piranha.Services
                 if (_cache != null)
                 {
                     _cache.Remove(model.Id.ToString());
-                    _cache.Remove($"DynamicContent_{ model.Id.ToString() }");
+                    _cache.Remove($"DynamicContent_{ model.Id }");
                 }
             });
         }

@@ -36,31 +36,31 @@ namespace Piranha.Extend.Fields
 
             if (get != null)
             {
+                using var scope = services.CreateScope();
+
+                // First add the current id to the params
+                var param = new List<object>
+                    {
+                        Id
+                    };
+
                 // Now inject any other parameters
-                using (var scope = services.CreateScope())
+                foreach (var p in get.GetParameters().Skip(1))
                 {
-                    var param = new List<object>();
+                    param.Add(scope.ServiceProvider.GetService(p.ParameterType));
+                }
 
-                    // First add the current id to the params
-                    param.Add(Id);
-
-                    foreach (var p in get.GetParameters().Skip(1))
+                // Check for async
+                if (typeof(Task<T>).IsAssignableFrom(get.ReturnType))
+                {
+                    Value = await ((Task<T>)get.Invoke(null, param.ToArray())).ConfigureAwait(false);
+                }
+                else
+                {
+                    await Task.Run(() =>
                     {
-                        param.Add(scope.ServiceProvider.GetService(p.ParameterType));
-                    }
-
-                    // Check for async
-                    if (typeof(Task<T>).IsAssignableFrom(get.ReturnType))
-                    {
-                        Value = await ((Task<T>)get.Invoke(null, param.ToArray())).ConfigureAwait(false);
-                    }
-                    else
-                    {
-                        await Task.Run(() =>
-                        {
-                            Value = (T)get.Invoke(null, param.ToArray());
-                        });
-                    }
+                        Value = (T)get.Invoke(null, param.ToArray());
+                    });
                 }
             }
         }
@@ -71,27 +71,26 @@ namespace Piranha.Extend.Fields
 
             if (get != null)
             {
-                using (var scope = services.CreateScope())
+                using var scope = services.CreateScope();
+
+                var param = new List<object>();
+
+                foreach (var p in get.GetParameters())
                 {
-                    var param = new List<object>();
+                    param.Add(scope.ServiceProvider.GetService(p.ParameterType));
+                }
 
-                    foreach (var p in get.GetParameters())
+                // Check for async
+                if (typeof(Task<IEnumerable<DataSelectFieldItem>>).IsAssignableFrom(get.ReturnType))
+                {
+                    Items = (await ((Task<IEnumerable<DataSelectFieldItem>>)get.Invoke(null, param.ToArray())).ConfigureAwait(false)).ToArray();
+                }
+                else
+                {
+                    await Task.Run(() =>
                     {
-                        param.Add(scope.ServiceProvider.GetService(p.ParameterType));
-                    }
-
-                    // Check for async
-                    if (typeof(Task<IEnumerable<DataSelectFieldItem>>).IsAssignableFrom(get.ReturnType))
-                    {
-                        Items = (await ((Task<IEnumerable<DataSelectFieldItem>>)get.Invoke(null, param.ToArray())).ConfigureAwait(false)).ToArray();
-                    }
-                    else
-                    {
-                        await Task.Run(() =>
-                        {
-                            Items = ((IEnumerable<DataSelectFieldItem>)get.Invoke(null, param.ToArray())).ToArray();
-                        });
-                    }
+                        Items = ((IEnumerable<DataSelectFieldItem>)get.Invoke(null, param.ToArray())).ToArray();
+                    });
                 }
             }
         }

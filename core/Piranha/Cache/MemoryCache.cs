@@ -63,7 +63,7 @@ namespace Piranha.Cache
                 }
                 return Utils.DeepClone(obj);
             }
-            return default(T);
+            return default;
         }
 
         /// <summary>

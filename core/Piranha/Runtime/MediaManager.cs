@@ -66,7 +66,7 @@ namespace Piranha.Runtime
                 {
                     Extension = extension.ToLower(),
                     ContentType = contentType,
-                    AllowProcessing = allowProcessing.HasValue ? allowProcessing.Value : _allowProcessing
+                    AllowProcessing = allowProcessing ?? _allowProcessing
                 });
             }
 

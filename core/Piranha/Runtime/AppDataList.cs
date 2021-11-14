@@ -20,7 +20,7 @@ namespace Piranha.Runtime
         /// <summary>
         /// The items collection.
         /// </summary>
-        protected readonly List<TItem> _items = new List<TItem>();
+        protected readonly List<TItem> _items = new();
 
         /// <summary>
         /// Registers a new item.
@@ -33,7 +33,7 @@ namespace Piranha.Runtime
             //
             // Make sure we don't register the same type multiple times.
             //
-            if (_items.Where(i => i.Type == type).Count() == 0)
+            if (!_items.Where(i => i.Type == type).Any())
             {
                 var item = Activator.CreateInstance<TItem>();
 
@@ -81,7 +81,7 @@ namespace Piranha.Runtime
                 var versionIndex = typeName.IndexOf(",");
                 if (versionIndex != -1)
                 {
-                    var fixedName = typeName.Substring(0, versionIndex).Replace("[[", "[");
+                    var fixedName = typeName[..versionIndex].Replace("[[", "[");
 
                     return _items.SingleOrDefault(i => i.TypeName.StartsWith(fixedName));
                 }

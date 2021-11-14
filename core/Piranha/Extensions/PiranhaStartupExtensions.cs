@@ -16,7 +16,7 @@ using Piranha.Services;
 public static class PiranhaStartupExtensions
 {
     public static IServiceCollection AddPiranha(this IServiceCollection services,
-        Action<PiranhaServiceBuilder> options = null, ServiceLifetime scope = ServiceLifetime.Scoped)
+        Action<PiranhaServiceBuilder> options = null)
     {
         var serviceBuilder = new PiranhaServiceBuilder(services);
 

@@ -39,7 +39,7 @@ namespace Piranha.Extend.Fields
 
             if (title.Length > 40)
             {
-                title = title.Substring(0, 40) + "...";
+                title = string.Concat(title.AsSpan(0, 40), "...");
             }
             return title;
         }
@@ -84,12 +84,12 @@ namespace Piranha.Extend.Fields
         /// <returns>True if the fields are equal</returns>
         public static bool operator ==(SimpleField<T> field1, SimpleField<T> field2)
         {
-            if ((object)field1 != null && (object)field2 != null)
+            if (field1 is not null && field2 is not null)
             {
                 return field1.Equals(field2);
             }
 
-            if ((object)field1 == null && (object)field2 == null)
+            if (field1 is null && field2 is null)
             {
                 return true;
             }

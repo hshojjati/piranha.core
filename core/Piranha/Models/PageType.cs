@@ -64,7 +64,7 @@ namespace Piranha.Models
 
             foreach (var region in Regions)
             {
-                region.Title = region.Title ?? region.Id;
+                region.Title ??= region.Id;
 
                 if (region.Fields.Select(f => f.Id).Distinct().Count() != region.Fields.Count)
                 {
@@ -73,8 +73,8 @@ namespace Piranha.Models
 
                 foreach (var field in region.Fields)
                 {
-                    field.Id = field.Id ?? "Default";
-                    field.Title = field.Title ?? field.Id;
+                    field.Id ??= "Default";
+                    field.Title ??= field.Id;
                 }
             }
         }

@@ -62,16 +62,15 @@ namespace Piranha.Services
         /// <returns>The new region value</returns>
         public Task<object> CreateDynamicRegionAsync(ContentTypeBase type, string regionId, bool managerInit = false)
         {
-            using (var scope = _services.CreateScope())
-            {
-                var region = type.Regions.FirstOrDefault(r => r.Id == regionId);
+            using var scope = _services.CreateScope();
 
-                if (region != null)
-                {
-                    return CreateDynamicRegionAsync(scope, region, true, managerInit);
-                }
-                return null;
+            var region = type.Regions.FirstOrDefault(r => r.Id == regionId);
+
+            if (region != null)
+            {
+                return CreateDynamicRegionAsync(scope, region, true, managerInit);
             }
+            return null;
         }
 
         /// <summary>
@@ -86,22 +85,21 @@ namespace Piranha.Services
 
             if (blockType != null)
             {
-                using (var scope = _services.CreateScope())
-                {
-                    var block = (Extend.Block)Activator.CreateInstance(blockType.Type);
-                    block.Type = typeName;
+                using var scope = _services.CreateScope();
 
-                    foreach (var prop in blockType.Type.GetProperties(App.PropertyBindings))
+                var block = (Extend.Block)Activator.CreateInstance(blockType.Type);
+                block.Type = typeName;
+
+                foreach (var prop in blockType.Type.GetProperties(App.PropertyBindings))
+                {
+                    if (typeof(Extend.IField).IsAssignableFrom(prop.PropertyType))
                     {
-                        if (typeof(Extend.IField).IsAssignableFrom(prop.PropertyType))
-                        {
-                            var field = Activator.CreateInstance(prop.PropertyType);
-                            await InitFieldAsync(scope, field, managerInit).ConfigureAwait(false);
-                            prop.SetValue(block, field);
-                        }
+                        var field = Activator.CreateInstance(prop.PropertyType);
+                        await InitFieldAsync(scope, field, managerInit).ConfigureAwait(false);
+                        prop.SetValue(block, field);
                     }
-                    return block;
                 }
+                return block;
             }
             return null;
         }
@@ -114,44 +112,43 @@ namespace Piranha.Services
         /// <returns>The new model</returns>
         private async Task<T> CreateDynamicModelAsync<T>(ContentTypeBase type) where T : ContentBase
         {
-            using (var scope = _services.CreateScope())
+            using var scope = _services.CreateScope();
+
+            // Create a new instance of the specified type
+            var model = Activator.CreateInstance<T>();
+
+            model.TypeId = type.Id;
+
+            foreach (var regionType in type.Regions)
             {
-                // Create a new instance of the specified type
-                var model = Activator.CreateInstance<T>();
+                object region = null;
 
-                model.TypeId = type.Id;
-
-                foreach (var regionType in type.Regions)
+                if (!regionType.Collection)
                 {
-                    object region = null;
+                    // Create and initialize the region
+                    region = await CreateDynamicRegionAsync(scope, regionType).ConfigureAwait(false);
+                }
+                else
+                {
+                    // Create a region item without initialization for type reference
+                    var listObject = await CreateDynamicRegionAsync(scope, regionType, false).ConfigureAwait(false);
 
-                    if (!regionType.Collection)
+                    if (listObject != null)
                     {
-                        // Create and initialize the region
-                        region = await CreateDynamicRegionAsync(scope, regionType).ConfigureAwait(false);
-                    }
-                    else
-                    {
-                        // Create a region item without initialization for type reference
-                        var listObject = await CreateDynamicRegionAsync(scope, regionType, false).ConfigureAwait(false);
-
-                        if (listObject != null)
-                        {
-                            // Create the region list
-                            region = Activator.CreateInstance(typeof(RegionList<>).MakeGenericType(listObject.GetType()));
-                            ((IRegionList)region).Model = (IDynamicContent)model;
-                            ((IRegionList)region).TypeId = type.Id;
-                            ((IRegionList)region).RegionId = regionType.Id;
-                        }
-                    }
-
-                    if (region != null)
-                    {
-                        ((IDictionary<string, object>)((IDynamicContent)model).Regions).Add(regionType.Id, region);
+                        // Create the region list
+                        region = Activator.CreateInstance(typeof(RegionList<>).MakeGenericType(listObject.GetType()));
+                        ((IRegionList)region).Model = (IDynamicContent)model;
+                        ((IRegionList)region).TypeId = type.Id;
+                        ((IRegionList)region).RegionId = regionType.Id;
                     }
                 }
-                return model;
+
+                if (region != null)
+                {
+                    ((IDictionary<string, object>)((IDynamicContent)model).Regions).Add(regionType.Id, region);
+                }
             }
+            return model;
         }
 
         /// <summary>
@@ -162,51 +159,50 @@ namespace Piranha.Services
         /// <returns>The new model</returns>
         private async Task<T> CreateModelAsync<T>(ContentTypeBase type) where T : ContentBase
         {
-            using (var scope = _services.CreateScope())
+            using var scope = _services.CreateScope();
+
+            var modelType = typeof(T);
+
+            if (!typeof(IContentInfo).IsAssignableFrom(modelType))
             {
-                var modelType = typeof(T);
+                modelType = Type.GetType(type.CLRType);
 
-                if (!typeof(IContentInfo).IsAssignableFrom(modelType))
+                if (modelType != typeof(T) && !typeof(T).IsAssignableFrom(modelType))
                 {
-                    modelType = Type.GetType(type.CLRType);
-
-                    if (modelType != typeof(T) && !typeof(T).IsAssignableFrom(modelType))
-                    {
-                        return null;
-                    }
+                    return null;
                 }
-
-                // Create a new instance of the specified type
-                var model = (T)Activator.CreateInstance(modelType);
-
-                model.TypeId = type.Id;
-
-                foreach (var regionType in type.Regions)
-                {
-                    object region = null;
-
-                    if (!regionType.Collection)
-                    {
-                        // Create and initialize the region
-                        region = await CreateRegionAsync(scope, model, modelType, regionType).ConfigureAwait(false);
-                    }
-                    else
-                    {
-                        var property = modelType.GetProperty(regionType.Id, App.PropertyBindings);
-
-                        if (property != null)
-                        {
-                            region = Activator.CreateInstance(typeof(List<>).MakeGenericType(property.PropertyType.GetGenericArguments()[0]));
-                        }
-                    }
-
-                    if (region != null)
-                    {
-                        modelType.SetPropertyValue(regionType.Id, model, region);
-                    }
-                }
-                return model;
             }
+
+            // Create a new instance of the specified type
+            var model = (T)Activator.CreateInstance(modelType);
+
+            model.TypeId = type.Id;
+
+            foreach (var regionType in type.Regions)
+            {
+                object region = null;
+
+                if (!regionType.Collection)
+                {
+                    // Create and initialize the region
+                    region = await CreateRegionAsync(scope, modelType, regionType).ConfigureAwait(false);
+                }
+                else
+                {
+                    var property = modelType.GetProperty(regionType.Id, App.PropertyBindings);
+
+                    if (property != null)
+                    {
+                        region = Activator.CreateInstance(typeof(List<>).MakeGenericType(property.PropertyType.GetGenericArguments()[0]));
+                    }
+                }
+
+                if (region != null)
+                {
+                    modelType.SetPropertyValue(regionType.Id, model, region);
+                }
+            }
+            return model;
         }
 
         /// <summary>
@@ -317,10 +313,8 @@ namespace Piranha.Services
         /// <returns>The initialized field</returns>
         public async Task<object> InitFieldAsync(object field, bool managerInit = false)
         {
-            using (var scope = _services.CreateScope())
-            {
-                return await InitFieldAsync(scope, field, managerInit).ConfigureAwait(false);
-            }
+            using var scope = _services.CreateScope();
+            return await InitFieldAsync(scope, field, managerInit).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -363,15 +357,15 @@ namespace Piranha.Services
                     }
                 }
 
-                if (!(model is IContentInfo) && model is IBlockContent blockModel)
+                if (model is not IContentInfo && model is IBlockContent blockModel)
                 {
                     foreach (var block in blockModel.Blocks)
                     {
                         await InitBlockAsync(scope, block, managerInit).ConfigureAwait(false);
 
-                        if (block is Extend.BlockGroup)
+                        if (block is Extend.BlockGroup blockGroupModel)
                         {
-                            foreach (var child in ((Extend.BlockGroup)block).Items)
+                            foreach (var child in blockGroupModel.Items)
                             {
                                 await InitBlockAsync(scope, child, managerInit).ConfigureAwait(false);
                             }
@@ -389,7 +383,7 @@ namespace Piranha.Services
         /// <param name="region">The region</param>
         /// <param name="regionType">The region type</param>
         /// <param name="managerInit">If this is initialization used by the manager</param>
-        private async Task InitDynamicRegionAsync(IServiceScope scope, object region, ContentTypeRegion regionType, bool managerInit)
+        private static async Task InitDynamicRegionAsync(IServiceScope scope, object region, ContentTypeRegion regionType, bool managerInit)
         {
             if (region != null)
             {
@@ -420,7 +414,7 @@ namespace Piranha.Services
         /// <param name="region">The region</param>
         /// <param name="regionType">The region type</param>
         /// <param name="managerInit">If this is initialization used by the manager</param>
-        private async Task InitRegionAsync(IServiceScope scope, object region, ContentTypeRegion regionType, bool managerInit)
+        private static async Task InitRegionAsync(IServiceScope scope, object region, ContentTypeRegion regionType, bool managerInit)
         {
             if (region != null)
             {
@@ -454,7 +448,7 @@ namespace Piranha.Services
         /// <param name="scope">The current service scope</param>
         /// <param name="block">The block</param>
         /// <param name="managerInit">If this is initialization used by the manager</param>
-        private async Task InitBlockAsync(IServiceScope scope, Extend.Block block, bool managerInit)
+        private static async Task InitBlockAsync(IServiceScope scope, Extend.Block block, bool managerInit)
         {
             if (block != null)
             {
@@ -491,7 +485,7 @@ namespace Piranha.Services
         /// <param name="initFields">If fields should be initialized</param>
         /// <param name="managerInit">If manager init should be performed on the fields</param>
         /// <returns>The created region</returns>
-        private async Task<object> CreateDynamicRegionAsync(IServiceScope scope, ContentTypeRegion regionType, bool initFields = true, bool managerInit = false)
+        private static async Task<object> CreateDynamicRegionAsync(IServiceScope scope, ContentTypeRegion regionType, bool initFields = true, bool managerInit = false)
         {
             if (regionType.Fields.Count == 1)
             {
@@ -530,12 +524,11 @@ namespace Piranha.Services
         /// Creates a new region.
         /// </summary>
         /// <param name="scope">The current service scope</param>
-        /// <param name="model">The model to create the region for</param>
         /// <param name="modelType">The model type</param>
         /// <param name="regionType">The region type</param>
         /// <param name="initFields">If fields should be initialized</param>
         /// <returns>The created region</returns>
-        private async Task<object> CreateRegionAsync(IServiceScope scope, object model, Type modelType, ContentTypeRegion regionType, bool initFields = true)
+        private static async Task<object> CreateRegionAsync(IServiceScope scope, Type modelType, ContentTypeRegion regionType, bool initFields = true)
         {
             if (regionType.Fields.Count == 1)
             {
@@ -580,7 +573,7 @@ namespace Piranha.Services
         /// </summary>
         /// <param name="fieldType">The field type</param>
         /// <returns>The new instance</returns>
-        private object CreateField(ContentTypeField fieldType)
+        private static object CreateField(ContentTypeField fieldType)
         {
             var type = App.Fields.GetByType(fieldType.Type);
 
@@ -598,7 +591,7 @@ namespace Piranha.Services
         /// <param name="field">The field</param>
         /// <param name="managerInit">If this is initialization used by the manager</param>
         /// <returns>The initialized field</returns>
-        private async Task<object> InitFieldAsync(IServiceScope scope, object field, bool managerInit)
+        private static async Task<object> InitFieldAsync(IServiceScope scope, object field, bool managerInit)
         {
             var appField = App.Fields.GetByType(field.GetType());
 

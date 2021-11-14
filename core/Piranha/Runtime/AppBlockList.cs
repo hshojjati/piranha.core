@@ -108,7 +108,7 @@ namespace Piranha.Runtime
             {
                 if (typeof(IField).IsAssignableFrom(prop.PropertyType))
                 {
-                    MethodInfo generic = null;
+                    MethodInfo generic;
 
                     if (typeof(SelectFieldBase).IsAssignableFrom(prop.PropertyType))
                     {
