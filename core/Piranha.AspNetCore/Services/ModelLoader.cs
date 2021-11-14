@@ -66,9 +66,9 @@ namespace Piranha.AspNetCore.Services
         {
             T model = null;
 
-            if (!draft && _app.CurrentPage != null && _app.CurrentPage.Id == id && _app.CurrentPage is T)
+            if (!draft && _app.CurrentPage != null && _app.CurrentPage.Id == id && _app.CurrentPage is T page)
             {
-                model = (T)_app.CurrentPage;
+                model = page;
             }
 
             // Check if we're requesting a draft
@@ -148,9 +148,9 @@ namespace Piranha.AspNetCore.Services
         {
             T model = null;
 
-            if (!draft && _app.CurrentPost != null && _app.CurrentPost.Id == id && _app.CurrentPost is T)
+            if (!draft && _app.CurrentPost != null && _app.CurrentPost.Id == id && _app.CurrentPost is T post)
             {
-                model = (T)_app.CurrentPost;
+                model = post;
             }
 
             // Check if we're requesting a draft

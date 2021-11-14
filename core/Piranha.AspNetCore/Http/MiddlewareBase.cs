@@ -67,7 +67,7 @@ namespace Piranha.AspNetCore.Http
         /// </summary>
         /// <param name="context">The current http context</param>
         /// <returns>If the request has already been handled</returns>
-        protected bool IsHandled(HttpContext context)
+        protected static bool IsHandled(HttpContext context)
         {
             var values = context.Request.Query["piranha_handled"];
             if (values.Count > 0)
@@ -82,7 +82,7 @@ namespace Piranha.AspNetCore.Http
         /// </summary>
         /// <param name="context">The current http context</param>
         /// <returns>If the request is for a draft</returns>
-        protected bool IsDraft(HttpContext context)
+        protected static bool IsDraft(HttpContext context)
         {
             var values = context.Request.Query["draft"];
             if (values.Count > 0)
@@ -97,7 +97,7 @@ namespace Piranha.AspNetCore.Http
         /// </summary>
         /// <param name="url">The url</param>
         /// <returns>If the given url is for the manager application</returns>
-        protected bool IsManagerRequest(string url)
+        protected static bool IsManagerRequest(string url)
         {
             if (string.IsNullOrEmpty(url))
             {

@@ -54,10 +54,10 @@ namespace Piranha.AspNetCore.Http
             if (!IsHandled(context) && !IsManagerRequest(context.Request.Path.Value))
             {
                 var url = context.Request.Path.HasValue ? context.Request.Path.Value : "";
-                var segments = !string.IsNullOrEmpty(url) ? url.Substring(1).Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries) : new string[] { };
+                var segments = !string.IsNullOrEmpty(url) ? url[1..].Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries) : Array.Empty<string>();
                 int pos = 0;
 
-                _logger?.LogDebug($"Url: [{ url }]");
+                _logger?.LogDebug("Url: [{url}]", url);
 
                 //
                 // 1: Store raw url & request information
@@ -236,15 +236,15 @@ namespace Piranha.AspNetCore.Http
                     }
                 }
 
-                _logger?.LogDebug($"Found Site: [{ site.Id }]");
+                _logger?.LogDebug("Found Site: [{Id}]", site.Id);
                 if (page != null)
                 {
-                    _logger?.LogDebug($"Found Page: [{ page.Id }]");
+                    _logger?.LogDebug("Found Page: [{Id}]", page.Id);
                 }
 
                 if (post != null)
                 {
-                    _logger?.LogDebug($"Found Post: [{ post.Id }]");
+                    _logger?.LogDebug("Found Post: [{Id}]", post.Id);
                 }
 
                 //
@@ -267,7 +267,7 @@ namespace Piranha.AspNetCore.Http
                         route.Append(post.Route ?? "/post");
                         for (var n = pos; n < segments.Length; n++)
                         {
-                            route.Append("/");
+                            route.Append('/');
                             route.Append(segments[n]);
                         }
 
@@ -276,7 +276,7 @@ namespace Piranha.AspNetCore.Http
                     }
                     else
                     {
-                        _logger?.LogDebug($"Setting redirect: [{ post.RedirectUrl }]");
+                        _logger?.LogDebug("Setting redirect: [{RedirectUrl}]", post.RedirectUrl);
 
                         context.Response.Redirect(post.RedirectUrl, post.RedirectType == RedirectType.Permanent);
                         return;
@@ -308,7 +308,7 @@ namespace Piranha.AspNetCore.Http
                             // This is a regular page, append trailing segments
                             for (var n = pos; n < segments.Length; n++)
                             {
-                                route.Append("/");
+                                route.Append('/');
                                 route.Append(segments[n]);
                             }
                         }
@@ -433,7 +433,7 @@ namespace Piranha.AspNetCore.Http
                     }
                     else
                     {
-                        _logger?.LogDebug($"Setting redirect: [{ page.RedirectUrl }]");
+                        _logger?.LogDebug("Setting redirect: [{RedirectUrl}]", page.RedirectUrl);
 
                         context.Response.Redirect(page.RedirectUrl, page.RedirectType == RedirectType.Permanent);
                         return;
@@ -445,7 +445,7 @@ namespace Piranha.AspNetCore.Http
                     var strRoute = route.ToString();
                     var strQuery = query.ToString();
 
-                    _logger?.LogDebug($"Setting Route: [{ strRoute }?{ strQuery }]");
+                    _logger?.LogDebug("Setting Route: [{strRoute}?{strQuery}]", strRoute, strQuery);
 
                     context.Request.Path = new PathString(strRoute);
                     if (context.Request.QueryString.HasValue)
@@ -477,7 +477,7 @@ namespace Piranha.AspNetCore.Http
 
             if (expires > 0 && content.Published.HasValue)
             {
-                _logger?.LogDebug($"Setting HTTP Cache for [{ content.Slug }]");
+                _logger?.LogDebug("Setting HTTP Cache for [{Slug}]", content.Slug);
 
                 var lastModified = !site.ContentLastModified.HasValue || content.LastModified > site.ContentLastModified
                     ? content.LastModified : site.ContentLastModified.Value;
@@ -501,7 +501,7 @@ namespace Piranha.AspNetCore.Http
             }
             else
             {
-                _logger?.LogDebug($"Setting HTTP NoCache for [{ content.Slug }]");
+                _logger?.LogDebug("Setting HTTP NoCache for [{Slug}]", content.Slug);
 
                 headers.CacheControl = new CacheControlHeaderValue
                 {
@@ -517,7 +517,7 @@ namespace Piranha.AspNetCore.Http
         /// <param name="site">The site</param>
         /// <param name="hostname">The requested host</param>
         /// <returns>The hostname split into host and prefix</returns>
-        private string[] GetMatchingHost(Site site, string hostname)
+        private static string[] GetMatchingHost(Site site, string hostname)
         {
             var result = new string[2];
 

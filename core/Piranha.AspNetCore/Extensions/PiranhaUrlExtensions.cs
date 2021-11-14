@@ -288,7 +288,7 @@ public static class PiranhaUrlExtensions
         sb.Append(app.Request.Host);
         if (app.Request.Port.HasValue)
         {
-            sb.Append(":");
+            sb.Append(':');
             sb.Append(app.Request.Port.ToString());
         }
         return sb.ToString();

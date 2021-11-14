@@ -99,7 +99,7 @@ namespace Piranha.AspNetCore.Services
                 var url = context.Request.Path.HasValue ? context.Request.Path.Value : "";
                 if (!string.IsNullOrEmpty(url) && url.Length > 1)
                 {
-                    var segments = url.Substring(1).Split(new char[] { '/' });
+                    var segments = url[1..].Split(new char[] { '/' });
                     var prefixedHostname = $"{context.Request.Host.Host}/{segments[0]}";
                     site = await Api.Sites.GetByHostnameAsync(prefixedHostname);
 
@@ -146,18 +146,17 @@ namespace Piranha.AspNetCore.Services
         /// <returns>The gravatar URL</returns>
         public string GetGravatarUrl(string email, int size = 0)
         {
-            using (var md5 = MD5.Create())
-            {
-                var bytes = md5.ComputeHash(Encoding.UTF8.GetBytes(email));
+            using var md5 = MD5.Create();
 
-                var sb = new StringBuilder(bytes.Length * 2);
-                for (var n = 0; n < bytes.Length; n++)
-                {
-                    sb.Append(bytes[n].ToString("X2"));
-                }
-                return "https://www.gravatar.com/avatar/" + sb.ToString().ToLower() +
-                       (size > 0 ? "?s=" + size : "");
+            var bytes = md5.ComputeHash(Encoding.UTF8.GetBytes(email));
+
+            var sb = new StringBuilder(bytes.Length * 2);
+            for (var n = 0; n < bytes.Length; n++)
+            {
+                sb.Append(bytes[n].ToString("X2"));
             }
+            return "https://www.gravatar.com/avatar/" + sb.ToString().ToLower() +
+                   (size > 0 ? "?s=" + size : "");
         }
 
         /// <summary>
@@ -165,7 +164,7 @@ namespace Piranha.AspNetCore.Services
         /// </summary>
         /// <param name="site">The site</param>
         /// <returns>The hostname split into host and prefix</returns>
-        private string[] GetFirstHost(Site site)
+        private static string[] GetFirstHost(Site site)
         {
             var result = new string[2];
 
