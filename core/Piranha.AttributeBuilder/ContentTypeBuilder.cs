@@ -273,7 +273,7 @@ namespace Piranha.AttributeBuilder
             return null;
         }
 
-        private ContentGroup GetContentGroup(Type type)
+        private static ContentGroup GetContentGroup(Type type)
         {
             var attr = type.GetCustomAttribute<ContentGroupAttribute>(false);
 
@@ -292,7 +292,7 @@ namespace Piranha.AttributeBuilder
             return null;
         }
 
-        private ContentType GetContentType(Type type)
+        private static ContentType GetContentType(Type type)
         {
             var group = type.GetCustomAttribute<ContentGroupAttribute>();
             if (group == null)
@@ -334,7 +334,7 @@ namespace Piranha.AttributeBuilder
             return null;
         }
 
-        private PageType GetPageType(Type type)
+        private static PageType GetPageType(Type type)
         {
             var attr = type.GetTypeInfo().GetCustomAttribute<PageTypeAttribute>();
 
@@ -410,7 +410,7 @@ namespace Piranha.AttributeBuilder
             return null;
         }
 
-        private PostType GetPostType(Type type)
+        private static PostType GetPostType(Type type)
         {
             var attr = type.GetTypeInfo().GetCustomAttribute<PostTypeAttribute>();
 
@@ -454,7 +454,7 @@ namespace Piranha.AttributeBuilder
             return null;
         }
 
-        private SiteType GetSiteType(Type type)
+        private static SiteType GetSiteType(Type type)
         {
             var attr = type.GetTypeInfo().GetCustomAttribute<SiteTypeAttribute>();
 
@@ -484,7 +484,7 @@ namespace Piranha.AttributeBuilder
             return null;
         }
 
-        private IList<ContentTypeRoute> GetRoutes(Type type)
+        private static IList<ContentTypeRoute> GetRoutes(Type type)
         {
             var routes = new List<ContentTypeRoute>();
 
@@ -510,7 +510,7 @@ namespace Piranha.AttributeBuilder
             return routes;
         }
 
-        private IList<ContentTypeEditor> GetEditors(Type type)
+        private static IList<ContentTypeEditor> GetEditors(Type type)
         {
             var editors = new List<ContentTypeEditor>();
 
@@ -544,7 +544,7 @@ namespace Piranha.AttributeBuilder
             return editors;
         }
 
-        private IList<ContentTypeRegion> GetRegions(Type type)
+        private static IList<ContentTypeRegion> GetRegions(Type type)
         {
             var regions = new List<ContentTypeRegion>();
 
@@ -571,7 +571,7 @@ namespace Piranha.AttributeBuilder
             return regions;
         }
 
-        private Tuple<int?, ContentTypeRegion> GetRegionType(PropertyInfo prop)
+        private static Tuple<int?, ContentTypeRegion> GetRegionType(PropertyInfo prop)
         {
             var attr = prop.GetCustomAttribute<RegionAttribute>();
 
@@ -657,7 +657,7 @@ namespace Piranha.AttributeBuilder
             return null;
         }
 
-        private Tuple<int?, ContentTypeField> GetFieldType(PropertyInfo prop)
+        private static Tuple<int?, ContentTypeField> GetFieldType(PropertyInfo prop)
         {
             var attr = prop.GetCustomAttribute<FieldAttribute>();
 
@@ -694,7 +694,7 @@ namespace Piranha.AttributeBuilder
             return null;
         }
 
-        private void RegisterField(Type type)
+        private static void RegisterField(Type type)
         {
             if (typeof(IEnumerable).IsAssignableFrom(type))
             {
@@ -705,7 +705,7 @@ namespace Piranha.AttributeBuilder
             {
                 if (type.GetCustomAttribute<FieldTypeAttribute>() != null)
                 {
-                    MethodInfo generic = null;
+                    MethodInfo generic;
 
                     if (typeof(Extend.Fields.SelectFieldBase).IsAssignableFrom(type))
                     {
