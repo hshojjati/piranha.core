@@ -72,7 +72,10 @@ public class PageService
 
         foreach (var site in model.Sites)
         {
-            site.Pages.AddRange(await GetPageStructure(site.Id));
+            foreach (var page in await GetPageStructure(site.Id))
+            {
+                site.Pages.Add(page);
+            }
         }
         return model;
     }

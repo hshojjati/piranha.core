@@ -36,7 +36,7 @@ public class SimpleUser
     /// <summary>
     /// Gets/sets the user claims.
     /// </summary>
-    public List<string> Claims { get; set; }
+    public IList<string> Claims { get; set; }
 
     /// <summary>
     /// Default constructor.
@@ -53,6 +53,9 @@ public class SimpleUser
     /// <param name="claims">The claims</param>
     public SimpleUser(params string[] claims) : this()
     {
-        Claims.AddRange(claims);
+        foreach (var claim in claims)
+        {
+            Claims.Add(claim);
+        }
     }
 }

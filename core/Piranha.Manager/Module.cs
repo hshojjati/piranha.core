@@ -68,17 +68,17 @@ public sealed class Module : IModule
     /// <summary>
     /// The currently registered custom scripts.
     /// </summary>
-    public List<ManagerScriptDefinition> Scripts { get; private set; }
+    public IList<ManagerScriptDefinition> Scripts { get; private set; }
 
     /// <summary>
     /// The currently registered custom styles.
     /// </summary>
-    public List<string> Styles { get; private set; }
+    public IList<string> Styles { get; private set; }
 
     /// <summary>
     /// The currently registrered partial views.
     /// </summary>
-    public List<string> Partials { get; private set; }
+    public IList<string> Partials { get; private set; }
 
     /// <summary>
     /// Gets/sets the url that should be used to sign out
@@ -94,7 +94,7 @@ public sealed class Module : IModule
     /// <summary>
     /// The currently registered preview sizes.
     /// </summary>
-    public List<PreviewSize> PreviewSizes { get; private set; } = new List<PreviewSize> {
+    public IList<PreviewSize> PreviewSizes { get; private set; } = new List<PreviewSize> {
             new PreviewSize { Title = "Desktop", Width = "100%", IconCss = "fas fa-desktop" },
             new PreviewSize { Title = "Laptop", Width = "1200px", IconCss = "fas fa-laptop" },
             new PreviewSize { Title = "Tablet", Width = "768px", IconCss = "fas fa-tablet-alt" },

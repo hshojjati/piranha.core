@@ -36,7 +36,7 @@ public abstract class SelectFieldBase : IField
     /// from the manager interface.
     /// </summary>
     [JsonIgnore]
-    public abstract List<SelectFieldItem> Items { get; }
+    public abstract IList<SelectFieldItem> Items { get; }
 
     /// <summary>
     /// Gets the list item title if this field is used in

@@ -25,7 +25,7 @@ public class PageListModel
         public string Title { get; set; }
         public string Slug { get; set; }
         public string EditUrl { get; set; }
-        public List<PageItem> Pages { get; set; } = new List<PageItem>();
+        public IList<PageItem> Pages { get; set; } = new List<PageItem>();
     }
 
     public class PageItem
@@ -47,7 +47,7 @@ public class PageListModel
         public bool IsScheduled { get; set; }
         public bool IsUnpublished { get; set; }
         public string Permalink { get; set; }
-        public List<PageItem> Items { get; set; } = new List<PageItem>();
+        public IList<PageItem> Items { get; set; } = new List<PageItem>();
     }
 
     public IList<PageSite> Sites { get; set; } = new List<PageSite>();

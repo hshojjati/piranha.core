@@ -20,7 +20,7 @@ public abstract class AppDataList<T, TItem> : IEnumerable<TItem> where TItem : A
     /// <summary>
     /// The items collection.
     /// </summary>
-    protected readonly List<TItem> _items = new();
+    protected readonly IList<TItem> _items = new List<TItem>();
 
     /// <summary>
     /// Registers a new item.

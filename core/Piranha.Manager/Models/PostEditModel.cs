@@ -134,22 +134,22 @@ public class PostEditModel : Content.ContentEditModel
     /// <summary>
     /// Gets/sets the selected tags.
     /// </summary>
-    public List<string> SelectedTags { get; set; } = new List<string>();
+    public IList<string> SelectedTags { get; set; } = new List<string>();
 
     /// <summary>
     /// Gets/sets the available categories.
     /// </summary>
-    public List<string> Categories { get; set; } = new List<string>();
+    public IList<string> Categories { get; set; } = new List<string>();
 
     /// <summary>
     /// Gets/sets the available tags.
     /// </summary>
-    public List<string> Tags { get; set; } = new List<string>();
+    public IList<string> Tags { get; set; } = new List<string>();
 
     /// <summary>
     /// Gets/sets the available routes.
     /// </summary>
-    public List<RouteModel> Routes { get; set; } = new List<RouteModel>();
+    public IList<RouteModel> Routes { get; set; } = new List<RouteModel>();
 
     /// <summary>
     /// Gets/sets the selected route.

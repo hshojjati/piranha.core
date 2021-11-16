@@ -172,7 +172,7 @@ public class MediaListModel
     /// <summary>
     /// Gets/sets the media folder structure.
     /// </summary>
-    public List<MediaFolderSimple> CurrentFolderBreadcrumb { get; set; }
+    public IList<MediaFolderSimple> CurrentFolderBreadcrumb { get; set; }
 
     /// <summary>
     /// Gets/sets the amount of media files at root level.

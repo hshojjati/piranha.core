@@ -134,7 +134,7 @@ public class ContentEditModel : AsyncResult
     /// <summary>
     /// Gets/sets the selected tags.
     /// </summary>
-    public List<string> SelectedTags { get; set; } = new List<string>();
+    public IList<string> SelectedTags { get; set; } = new List<string>();
 
     /// <summary>
     /// Gets/sets the available categories.
