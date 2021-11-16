@@ -10,8 +10,7 @@
 
 using System;
 
-namespace Piranha.Data
-{
-    [Serializable]
-    public sealed class PageType : ContentTypeBase { }
-}
+namespace Piranha.Data;
+
+[Serializable]
+public sealed class PageType : ContentTypeBase { }

@@ -10,13 +10,12 @@
 
 using System;
 
-namespace Piranha.Models
+namespace Piranha.Models;
+
+public interface ITypeModel
 {
-    public interface ITypeModel
-    {
-        /// <summary>
-        /// Gets/sets the unique model id.
-        /// </summary>
-        string Id { get; set; }
-    }
+    /// <summary>
+    /// Gets/sets the unique model id.
+    /// </summary>
+    string Id { get; set; }
 }

@@ -10,16 +10,15 @@
 
 using System.Collections.Generic;
 
-namespace Piranha.Models
+namespace Piranha.Models;
+
+/// <summary>
+/// Interface for content that can be tagged.
+/// </summary>
+public interface ITaggedContent
 {
     /// <summary>
-    /// Interface for content that can be tagged.
+    /// Gets/sets the available tags.
     /// </summary>
-    public interface ITaggedContent
-    {
-        /// <summary>
-        /// Gets/sets the available tags.
-        /// </summary>
-        IList<Taxonomy> Tags { get; set; }
-    }
+    IList<Taxonomy> Tags { get; set; }
 }

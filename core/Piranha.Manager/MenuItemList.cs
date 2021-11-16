@@ -11,18 +11,18 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Piranha.Manager
+namespace Piranha.Manager;
+
+public class MenuItemList : List<MenuItem>
 {
-    public class MenuItemList : List<MenuItem>
+    /// <summary>
+    /// Gets the menu item with the given internal id.
+    /// </summary>
+    public MenuItem this[string internalId]
     {
-        /// <summary>
-        /// Gets the menu item with the given internal id.
-        /// </summary>
-        public MenuItem this[string internalId] {
-            get
-            {
-                return this.FirstOrDefault(i => i.InternalId == internalId);
-            }
+        get
+        {
+            return this.FirstOrDefault(i => i.InternalId == internalId);
         }
     }
 }

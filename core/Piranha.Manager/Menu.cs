@@ -8,17 +8,17 @@
  *
  */
 
-namespace Piranha.Manager
+namespace Piranha.Manager;
+
+/// <summary>
+/// Static class for defining the manager menu.
+/// </summary>
+public static class Menu
 {
     /// <summary>
-    /// Static class for defining the manager menu.
+    /// The basic manager menu.
     /// </summary>
-    public static class Menu
-    {
-        /// <summary>
-        /// The basic manager menu.
-        /// </summary>
-        public static MenuItemList Items { get; } = new MenuItemList
+    public static MenuItemList Items { get; } = new MenuItemList
         {
             new MenuItem
             {
@@ -93,5 +93,4 @@ namespace Piranha.Manager
                 }
             }
         };
-    }
 }

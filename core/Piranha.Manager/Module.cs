@@ -8,18 +8,18 @@
  *
  */
 
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Piranha.Extend;
 using Piranha.Security;
 
-namespace Piranha.Manager
+namespace Piranha.Manager;
+
+public sealed class Module : IModule
 {
-    public sealed class Module : IModule
-    {
-        private readonly List<PermissionItem> _permissions = new List<PermissionItem>
+    private readonly List<PermissionItem> _permissions = new List<PermissionItem>
         {
             new PermissionItem { Name = Permission.Admin, Title = "Admin" },
             new PermissionItem { Name = Permission.Aliases, Title = "List Aliases", Category = "Aliases" },
@@ -65,116 +65,115 @@ namespace Piranha.Manager
             new PermissionItem { Name = Permission.SitesSave, Title = "Save Sites", Category = "Sites" }
         };
 
-        /// <summary>
-        /// The currently registered custom scripts.
-        /// </summary>
-        public List<ManagerScriptDefinition> Scripts { get; private set; }
+    /// <summary>
+    /// The currently registered custom scripts.
+    /// </summary>
+    public List<ManagerScriptDefinition> Scripts { get; private set; }
 
-        /// <summary>
-        /// The currently registered custom styles.
-        /// </summary>
-        public List<string> Styles { get; private set; }
+    /// <summary>
+    /// The currently registered custom styles.
+    /// </summary>
+    public List<string> Styles { get; private set; }
 
-        /// <summary>
-        /// The currently registrered partial views.
-        /// </summary>
-        public List<string> Partials { get; private set; }
+    /// <summary>
+    /// The currently registrered partial views.
+    /// </summary>
+    public List<string> Partials { get; private set; }
 
-        /// <summary>
-        /// Gets/sets the url that should be used to sign out
-        /// of the manager.
-        /// </summary>
-        public string LogoutUrl { get; set; }
+    /// <summary>
+    /// Gets/sets the url that should be used to sign out
+    /// of the manager.
+    /// </summary>
+    public string LogoutUrl { get; set; }
 
-        /// <summary>
-        /// Gets/sets the url to the currently registered editor init script.
-        /// </summary>
-        public static string EditorInitScriptUrl { get; set; }
+    /// <summary>
+    /// Gets/sets the url to the currently registered editor init script.
+    /// </summary>
+    public static string EditorInitScriptUrl { get; set; }
 
-        /// <summary>
-        /// The currently registered preview sizes.
-        /// </summary>
-        public List<PreviewSize> PreviewSizes { get; private set; } = new List<PreviewSize> {
+    /// <summary>
+    /// The currently registered preview sizes.
+    /// </summary>
+    public List<PreviewSize> PreviewSizes { get; private set; } = new List<PreviewSize> {
             new PreviewSize { Title = "Desktop", Width = "100%", IconCss = "fas fa-desktop" },
             new PreviewSize { Title = "Laptop", Width = "1200px", IconCss = "fas fa-laptop" },
             new PreviewSize { Title = "Tablet", Width = "768px", IconCss = "fas fa-tablet-alt" },
             new PreviewSize { Title = "Mobile", Width = "320px", IconCss = "fas fa-mobile-alt" }
         };
 
-        /// <summary>
-        /// Gets the Author
-        /// </summary>
-        public string Author => "Piranha";
+    /// <summary>
+    /// Gets the Author
+    /// </summary>
+    public string Author => "Piranha";
 
-        /// <summary>
-        /// Gets the Name
-        /// </summary>
-        public string Name => "Piranha.Manager";
+    /// <summary>
+    /// Gets the Name
+    /// </summary>
+    public string Name => "Piranha.Manager";
 
-        /// <summary>
-        /// Gets the Version
-        /// </summary>
-        public string Version => Piranha.Utils.GetAssemblyVersion(this.GetType().Assembly);
+    /// <summary>
+    /// Gets the Version
+    /// </summary>
+    public string Version => Piranha.Utils.GetAssemblyVersion(this.GetType().Assembly);
 
-        /// <summary>
-        /// Gets the description
-        /// </summary>
-        public string Description => "Manager panel for Piranha CMS for AspNetCore.";
+    /// <summary>
+    /// Gets the description
+    /// </summary>
+    public string Description => "Manager panel for Piranha CMS for AspNetCore.";
 
-        /// <summary>
-        /// Gets the package url.
-        /// </summary>
-        public string PackageUrl => "https://www.nuget.org/packages/Piranha.Manager";
+    /// <summary>
+    /// Gets the package url.
+    /// </summary>
+    public string PackageUrl => "https://www.nuget.org/packages/Piranha.Manager";
 
-        /// <summary>
-        /// Gets the icon url.
-        /// </summary>
-        public string IconUrl => "https://piranhacms.org/assets/twitter-shield.png";
+    /// <summary>
+    /// Gets the icon url.
+    /// </summary>
+    public string IconUrl => "https://piranhacms.org/assets/twitter-shield.png";
 
-        /// <summary>
-        /// The assembly.
-        /// </summary>
-        internal static readonly Assembly Assembly;
+    /// <summary>
+    /// The assembly.
+    /// </summary>
+    internal static readonly Assembly Assembly;
 
-        /// <summary>
-        /// Last modification date of the assembly.
-        /// </summary>
-        internal static readonly DateTime LastModified;
+    /// <summary>
+    /// Last modification date of the assembly.
+    /// </summary>
+    internal static readonly DateTime LastModified;
 
-        /// <summary>
-        /// Static initialization.
-        /// </summary>
-        static Module()
+    /// <summary>
+    /// Static initialization.
+    /// </summary>
+    static Module()
+    {
+        // Get assembly information
+        Assembly = typeof(Module).GetTypeInfo().Assembly;
+        LastModified = new FileInfo(Assembly.Location).LastWriteTime;
+    }
+
+    /// <summary>
+    /// Default constructor.
+    /// </summary>
+    public Module()
+    {
+        Partials = new List<string>();
+        Scripts = new List<ManagerScriptDefinition>();
+        Styles = new List<string>();
+    }
+
+    /// <summary>
+    /// Initializes the module.
+    /// </summary>
+    public void Init()
+    {
+        // Register permissions
+        foreach (var permission in _permissions)
         {
-            // Get assembly information
-            Assembly = typeof(Module).GetTypeInfo().Assembly;
-            LastModified = new FileInfo(Assembly.Location).LastWriteTime;
-        }
+            // Set the permission to internal
+            permission.IsInternal = true;
 
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public Module()
-        {
-            Partials = new List<string>();
-            Scripts = new List<ManagerScriptDefinition>();
-            Styles = new List<string>();
-        }
-
-        /// <summary>
-        /// Initializes the module.
-        /// </summary>
-        public void Init()
-        {
-            // Register permissions
-            foreach (var permission in _permissions)
-            {
-                // Set the permission to internal
-                permission.IsInternal = true;
-
-                // Add to the global permission collection
-                App.Permissions["Manager"].Add(permission);
-            }
+            // Add to the global permission collection
+            App.Permissions["Manager"].Add(permission);
         }
     }
 }

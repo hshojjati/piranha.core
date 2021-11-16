@@ -10,19 +10,18 @@
 
 using System;
 
-namespace Piranha.Data
-{
-    [Serializable]
-    public sealed class SiteField : ContentFieldBase
-    {
-        /// <summary>
-        /// Gets/sets the site id.
-        /// </summary>
-        public Guid SiteId { get; set; }
+namespace Piranha.Data;
 
-        /// <summary>
-        /// Gets/sets the site.
-        /// </summary>
-        public Site Site { get; set; }
-    }
+[Serializable]
+public sealed class SiteField : ContentFieldBase
+{
+    /// <summary>
+    /// Gets/sets the site id.
+    /// </summary>
+    public Guid SiteId { get; set; }
+
+    /// <summary>
+    /// Gets/sets the site.
+    /// </summary>
+    public Site Site { get; set; }
 }

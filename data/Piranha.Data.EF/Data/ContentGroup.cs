@@ -10,19 +10,18 @@
 
 using System;
 
-namespace Piranha.Data
-{
-    [Serializable]
-    public sealed class ContentGroup : Models.ContentGroup
-    {
-        /// <summary>
-        /// Gets/sets the created date.
-        /// </summary>
-        public DateTime Created { get; set; }
+namespace Piranha.Data;
 
-        /// <summary>
-        /// Gets/sets the last modification date.
-        /// </summary>
-        public DateTime LastModified { get; set; }
-    }
+[Serializable]
+public sealed class ContentGroup : Models.ContentGroup
+{
+    /// <summary>
+    /// Gets/sets the created date.
+    /// </summary>
+    public DateTime Created { get; set; }
+
+    /// <summary>
+    /// Gets/sets the last modification date.
+    /// </summary>
+    public DateTime LastModified { get; set; }
 }

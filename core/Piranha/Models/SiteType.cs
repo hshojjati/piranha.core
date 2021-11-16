@@ -11,35 +11,34 @@
 using System;
 using System.Linq;
 
-namespace Piranha.Models
+namespace Piranha.Models;
+
+[Serializable]
+public sealed class SiteType : ContentTypeBase
 {
-    [Serializable]
-    public sealed class SiteType : ContentTypeBase
+    /// <summary>
+    /// Validates that the site type is correctly defined.
+    /// </summary>
+    public void Ensure()
     {
-        /// <summary>
-        /// Validates that the site type is correctly defined.
-        /// </summary>
-        public void Ensure()
+        if (Regions.Select(r => r.Id).Distinct().Count() != Regions.Count)
         {
-            if (Regions.Select(r => r.Id).Distinct().Count() != Regions.Count)
+            throw new InvalidOperationException($"Region Id not unique for site type {Id}");
+        }
+
+        foreach (var region in Regions)
+        {
+            region.Title ??= region.Id;
+
+            if (region.Fields.Select(f => f.Id).Distinct().Count() != region.Fields.Count)
             {
-                throw new InvalidOperationException($"Region Id not unique for site type {Id}");
+                throw new InvalidOperationException($"Field Id not unique for site type {Id}");
             }
 
-            foreach (var region in Regions)
+            foreach (var field in region.Fields)
             {
-                region.Title ??= region.Id;
-
-                if (region.Fields.Select(f => f.Id).Distinct().Count() != region.Fields.Count)
-                {
-                    throw new InvalidOperationException($"Field Id not unique for site type {Id}");
-                }
-
-                foreach (var field in region.Fields)
-                {
-                    field.Id ??= "Default";
-                    field.Title ??= field.Id;
-                }
+                field.Id ??= "Default";
+                field.Title ??= field.Id;
             }
         }
     }

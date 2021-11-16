@@ -11,15 +11,14 @@
 using System;
 using Newtonsoft.Json;
 
-namespace Piranha.Data
-{
-    [Serializable]
-    public sealed class PostPermission
-    {
-        public Guid PostId { get; set; }
-        public string Permission { get; set; }
+namespace Piranha.Data;
 
-        [JsonIgnore]
-        public Post Post { get; set; }
-    }
+[Serializable]
+public sealed class PostPermission
+{
+    public Guid PostId { get; set; }
+    public string Permission { get; set; }
+
+    [JsonIgnore]
+    public Post Post { get; set; }
 }

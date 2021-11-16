@@ -10,25 +10,24 @@
 
 using Microsoft.AspNetCore.Builder;
 
-namespace Piranha.AspNetCore
+namespace Piranha.AspNetCore;
+
+/// <summary>
+/// Application builder for simple startup.
+/// </summary>
+public class PiranhaApplicationBuilder
 {
     /// <summary>
-    /// Application builder for simple startup.
+    /// The inner Application Builder.
     /// </summary>
-    public class PiranhaApplicationBuilder
-    {
-        /// <summary>
-        /// The inner Application Builder.
-        /// </summary>
-        public readonly IApplicationBuilder Builder;
+    public readonly IApplicationBuilder Builder;
 
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        /// <param name="builder">The current application builder</param>
-        public PiranhaApplicationBuilder(IApplicationBuilder builder)
-        {
-            Builder = builder;
-        }
+    /// <summary>
+    /// Default constructor.
+    /// </summary>
+    /// <param name="builder">The current application builder</param>
+    public PiranhaApplicationBuilder(IApplicationBuilder builder)
+    {
+        Builder = builder;
     }
 }

@@ -10,15 +10,14 @@
 
 using System;
 
-namespace Piranha.Models
+namespace Piranha.Models;
+
+public enum MediaType
 {
-    public enum MediaType
-    {
-        Unknown,
-        Document,
-        Image,
-        Video,
-        Audio,
-        Resource
-    }
+    Unknown,
+    Document,
+    Image,
+    Video,
+    Audio,
+    Resource
 }

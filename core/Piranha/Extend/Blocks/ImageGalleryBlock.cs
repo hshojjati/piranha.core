@@ -8,16 +8,13 @@
  *
  */
 
-using Piranha.Extend.Fields;
+namespace Piranha.Extend.Blocks;
 
-namespace Piranha.Extend.Blocks
+/// <summary>
+/// Image block.
+/// </summary>
+[BlockGroupType(Name = "Gallery", Category = "Media", Icon = "fas fa-images")]
+[BlockItemType(Type = typeof(ImageBlock))]
+public class ImageGalleryBlock : BlockGroup
 {
-    /// <summary>
-    /// Image block.
-    /// </summary>
-    [BlockGroupType(Name = "Gallery", Category = "Media", Icon = "fas fa-images")]
-    [BlockItemType(Type = typeof(ImageBlock))]
-    public class ImageGalleryBlock : BlockGroup
-    {
-    }
 }

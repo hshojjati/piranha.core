@@ -10,12 +10,11 @@
 
 using System;
 
-namespace Piranha.Manager.Models
+namespace Piranha.Manager.Models;
+
+public class MediaFolderModel
 {
-    public class MediaFolderModel
-    {
-        public Guid? Id { get; set; }
-        public Guid? ParentId { get; set; }
-        public string Name { get; set; }
-    }
+    public Guid? Id { get; set; }
+    public Guid? ParentId { get; set; }
+    public string Name { get; set; }
 }

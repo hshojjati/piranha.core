@@ -8,7 +8,6 @@
  *
  */
 
-namespace Piranha.Manager.Localization
-{
-    public class Alias { }
-}
+namespace Piranha.Manager.Localization;
+
+public class Alias { }

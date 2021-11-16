@@ -10,15 +10,14 @@
 
 using System;
 
-namespace Piranha.Models
+namespace Piranha.Models;
+
+/// <summary>
+/// Options used to customize how the field is
+/// handled in the manager panel.
+/// </summary>
+[Flags]
+public enum FieldOption
 {
-    /// <summary>
-    /// Options used to customize how the field is
-    /// handled in the manager panel.
-    /// </summary>
-    [Flags]
-    public enum FieldOption
-    {
-        HalfWidth = 1
-    }
+    HalfWidth = 1
 }

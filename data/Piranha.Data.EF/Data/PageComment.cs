@@ -10,19 +10,18 @@
 
 using System;
 
-namespace Piranha.Data
-{
-    [Serializable]
-    public sealed class PageComment : Comment
-    {
-        /// <summary>
-        /// Gets/sets the page id.
-        /// </summary>
-        public Guid PageId { get; set; }
+namespace Piranha.Data;
 
-        /// <summary>
-        /// Gets/sets the page.
-        /// </summary>
-        public Page Page { get; set; }
-    }
+[Serializable]
+public sealed class PageComment : Comment
+{
+    /// <summary>
+    /// Gets/sets the page id.
+    /// </summary>
+    public Guid PageId { get; set; }
+
+    /// <summary>
+    /// Gets/sets the page.
+    /// </summary>
+    public Page Page { get; set; }
 }

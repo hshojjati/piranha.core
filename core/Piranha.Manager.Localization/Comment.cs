@@ -8,7 +8,6 @@
  *
  */
 
-namespace Piranha.Manager.Localization
-{
-    public class Comment { }
-}
+namespace Piranha.Manager.Localization;
+
+public class Comment { }

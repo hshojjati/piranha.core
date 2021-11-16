@@ -10,17 +10,16 @@
 
 using Microsoft.EntityFrameworkCore;
 
-namespace Piranha.Data.EF.PostgreSql
+namespace Piranha.Data.EF.PostgreSql;
+
+[NoCoverage]
+public sealed class PostgreSqlDb : Db<PostgreSqlDb>
 {
-    [NoCoverage]
-    public sealed class PostgreSqlDb : Db<PostgreSqlDb>
+    /// <summary>
+    /// Default constructor.
+    /// </summary>
+    /// <param name="options">Configuration options</param>
+    public PostgreSqlDb(DbContextOptions<PostgreSqlDb> options) : base(options)
     {
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        /// <param name="options">Configuration options</param>
-        public PostgreSqlDb(DbContextOptions<PostgreSqlDb> options) : base(options)
-        {
-        }
     }
 }

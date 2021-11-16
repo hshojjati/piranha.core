@@ -8,10 +8,10 @@
  *
  */
 
-using Microsoft.Extensions.DependencyInjection;
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using System;
+using Microsoft.Extensions.DependencyInjection;
 using Piranha.Manager.LocalAuth;
 
 public static class SimpleSecurityExtensions

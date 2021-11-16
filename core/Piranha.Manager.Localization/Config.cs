@@ -8,7 +8,6 @@
  *
  */
 
-namespace Piranha.Manager.Localization
-{
-    public class Config { }
-}
+namespace Piranha.Manager.Localization;
+
+public class Config { }

@@ -10,13 +10,12 @@
 
 using System;
 
-namespace Piranha.Extend
+namespace Piranha.Extend;
+
+/// <summary>
+/// Base class for field settings.
+/// </summary>
+[AttributeUsage(AttributeTargets.Property)]
+public abstract class FieldSettingsAttribute : Attribute
 {
-    /// <summary>
-    /// Base class for field settings.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Property)]
-    public abstract class FieldSettingsAttribute : Attribute
-    {
-    }
 }

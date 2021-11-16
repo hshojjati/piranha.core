@@ -8,7 +8,6 @@
  *
  */
 
-namespace Piranha.Manager.Localization
-{
-    public class Media { }
-}
+namespace Piranha.Manager.Localization;
+
+public class Media { }

@@ -10,17 +10,16 @@
 
 using System;
 
-namespace Piranha.AttributeBuilder
+namespace Piranha.AttributeBuilder;
+
+/// <summary>
+/// Attribute for marking a class as a page type.
+/// </summary>
+[AttributeUsage(AttributeTargets.Class)]
+public class SiteTypeAttribute : ContentTypeBaseAttribute
 {
     /// <summary>
-    /// Attribute for marking a class as a page type.
+    /// Default constructor.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class)]
-    public class SiteTypeAttribute : ContentTypeBaseAttribute
-    {
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public SiteTypeAttribute() : base() { }
-    }
+    public SiteTypeAttribute() : base() { }
 }

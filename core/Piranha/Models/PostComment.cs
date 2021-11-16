@@ -10,11 +10,10 @@
 
 using System;
 
-namespace Piranha.Models
-{
-    /// <summary>
-    /// A comment related to a post.
-    /// </summary>
-    [Serializable]
-    public sealed class PostComment : Comment { }
-}
+namespace Piranha.Models;
+
+/// <summary>
+/// A comment related to a post.
+/// </summary>
+[Serializable]
+public sealed class PostComment : Comment { }

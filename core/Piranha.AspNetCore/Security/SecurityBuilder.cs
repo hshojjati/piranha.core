@@ -10,52 +10,51 @@
 
 using Microsoft.AspNetCore.Authorization;
 
-namespace Piranha.AspNetCore.Security
+namespace Piranha.AspNetCore.Security;
+
+/// <summary>
+/// The security builder is used for creating application
+/// policies that can be selected from the manager
+/// interface.
+/// </summary>
+public class SecurityBuilder
 {
     /// <summary>
-    /// The security builder is used for creating application
-    /// policies that can be selected from the manager
-    /// interface.
+    /// The policy builder.
     /// </summary>
-    public class SecurityBuilder
+    private readonly AuthorizationOptions _authorization;
+
+    /// <summary>
+    /// Default constructor.
+    /// </summary>
+    /// <param name="authorization">The authorization options</param>
+    public SecurityBuilder(AuthorizationOptions authorization)
     {
-        /// <summary>
-        /// The policy builder.
-        /// </summary>
-        private readonly AuthorizationOptions _authorization;
+        _authorization = authorization;
+    }
 
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        /// <param name="authorization">The authorization options</param>
-        public SecurityBuilder(AuthorizationOptions authorization)
+    /// <summary>
+    /// Uses the specified permission in the application.
+    /// </summary>
+    /// <param name="name">The name</param>
+    /// <param name="title">The optional title. If omitted the name will be used as title</param>
+    /// <returns>The builder</returns>
+    public SecurityBuilder UsePermission(string name, string title = null)
+    {
+        // Add a policy with the specified name
+        _authorization.AddPolicy(name, policy =>
         {
-            _authorization = authorization;
-        }
-
-        /// <summary>
-        /// Uses the specified permission in the application.
-        /// </summary>
-        /// <param name="name">The name</param>
-        /// <param name="title">The optional title. If omitted the name will be used as title</param>
-        /// <returns>The builder</returns>
-        public SecurityBuilder UsePermission(string name, string title = null)
-        {
-            // Add a policy with the specified name
-            _authorization.AddPolicy(name, policy =>
-            {
                 // Require a claim with the same name as the policy
                 policy.RequireClaim(name, name);
 
                 // Add the specified policy to the manager
                 App.Permissions["App"].Add(new Piranha.Security.PermissionItem
-                {
-                    Title = title ?? name,
-                    Name = name
-                });
+            {
+                Title = title ?? name,
+                Name = name
             });
+        });
 
-            return this;
-        }
+        return this;
     }
 }
