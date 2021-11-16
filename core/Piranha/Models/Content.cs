@@ -8,6 +8,8 @@
  *
  */
 
+using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace Piranha.Models;
@@ -16,6 +18,7 @@ namespace Piranha.Models;
 /// Base class for generic content.
 /// </summary>
 /// <typeparam name="T">The content type</typeparam>
+[Serializable]
 public abstract class Content<T> : GenericContent where T : Content<T>
 {
     /// <summary>
@@ -24,6 +27,7 @@ public abstract class Content<T> : GenericContent where T : Content<T>
     /// <param name="api">The current api</param>
     /// <param name="typeId">The unique page type id</param>
     /// <returns>The new model</returns>
+    [SuppressMessage("Design", "CA1000", Justification = "Public API")]
     public static Task<T> CreateAsync(IApi api, string typeId = null)
     {
         return api.Content.CreateAsync<T>(typeId);

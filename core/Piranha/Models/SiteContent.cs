@@ -9,6 +9,7 @@
  */
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace Piranha.Models;
@@ -26,6 +27,7 @@ public class SiteContent<T> : SiteContentBase where T : SiteContent<T>
     /// <param name="api">The current api</param>
     /// <param name="typeId">The unique site type id</param>
     /// <returns>The new model</returns>
+    [SuppressMessage("Design", "CA1000", Justification = "Public API")]
     public static Task<T> CreateAsync(IApi api, string typeId = null)
     {
         return api.Sites.CreateContentAsync<T>(typeId);
