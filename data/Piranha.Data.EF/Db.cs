@@ -226,7 +226,7 @@ public abstract class Db<T> : DbContext, IDb where T : Db<T>
     /// Default constructor.
     /// </summary>
     /// <param name="options">Configuration options</param>
-    public Db(DbContextOptions<T> options) : base(options)
+    protected Db(DbContextOptions<T> options) : base(options)
     {
         if (!IsInitialized)
         {

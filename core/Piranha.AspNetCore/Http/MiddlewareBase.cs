@@ -34,7 +34,7 @@ public abstract class MiddlewareBase
     /// Creates a new middleware instance.
     /// </summary>
     /// <param name="next">The next middleware in the pipeline</param>
-    public MiddlewareBase(RequestDelegate next)
+    protected MiddlewareBase(RequestDelegate next)
     {
         _next = next;
     }
@@ -44,7 +44,7 @@ public abstract class MiddlewareBase
     /// </summary>
     /// <param name="next">The next middleware in the pipeline</param>
     /// <param name="factory">The logger factory</param>
-    public MiddlewareBase(RequestDelegate next, ILoggerFactory factory) : this(next)
+    protected MiddlewareBase(RequestDelegate next, ILoggerFactory factory) : this(next)
     {
         if (factory != null)
         {

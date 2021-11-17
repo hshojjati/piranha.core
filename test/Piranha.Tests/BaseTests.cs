@@ -27,7 +27,7 @@ namespace Piranha.Tests
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public BaseTests() {
+        protected BaseTests() {
             Init();
         }
 
