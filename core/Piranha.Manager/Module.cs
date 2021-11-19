@@ -17,6 +17,9 @@ using Piranha.Security;
 
 namespace Piranha.Manager;
 
+/// <summary>
+/// The manager module.
+/// </summary>
 public sealed class Module : IModule
 {
     private readonly List<PermissionItem> _permissions = new List<PermissionItem>

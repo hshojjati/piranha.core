@@ -10,6 +10,7 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
@@ -43,6 +44,7 @@ namespace Piranha.Tests.Services
     }
 
     [Collection("Integration tests")]
+    [SuppressMessage("Microsoft.Design", "CA1034", Justification = "Test code. Not important for the packages.")]
     public class SiteTests : BaseTestsAsync
     {
         private const string SITE_1 = "MyFirstSite";

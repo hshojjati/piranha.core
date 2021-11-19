@@ -9,6 +9,7 @@
  */
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Xunit;
 using Piranha.Models;
@@ -16,6 +17,8 @@ using Piranha.Models;
 namespace Piranha.Tests.Hooks
 {
     [Collection("Integration tests")]
+    [SuppressMessage("Microsoft.Design", "CA1032", Justification = "Test code. Not important for the packages.")]
+    [SuppressMessage("Microsoft.Design", "CA1034", Justification = "Test code. Not important for the packages.")]
     public class SiteHookTests : BaseTestsAsync
     {
         private const string TITLE = "My Hook Site";

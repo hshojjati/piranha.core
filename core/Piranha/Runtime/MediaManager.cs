@@ -12,75 +12,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Piranha.Models;
+using Piranha.Runtime.Media;
 
 namespace Piranha.Runtime;
 
 public class MediaManager
 {
-    /// <summary>
-    /// A registered media type.
-    /// </summary>
-    public class MediaTypeItem
-    {
-        /// <summary>
-        /// Gets/sets the file extension.
-        /// </summary>
-        public string Extension { get; set; }
-
-        /// <summary>
-        /// Gets/sets the content type.
-        /// </summary>
-        public string ContentType { get; set; }
-
-        /// <summary>
-        /// If image processing should be applied to this media type.
-        /// </summary>
-        public bool AllowProcessing { get; set; }
-    }
-
-    /// <summary>
-    /// A list of media types.
-    /// </summary>
-    public class MediaTypeList : List<MediaTypeItem>
-    {
-        private readonly bool _allowProcessing;
-
-        /// <summary>
-        /// Default constructor
-        /// </summary>
-        /// <param name="allowProcessing">If image processing should be applied by default</param>
-        public MediaTypeList(bool allowProcessing = false)
-        {
-            _allowProcessing = allowProcessing;
-        }
-
-        /// <summary>
-        /// Adds a new media type.
-        /// </summary>
-        /// <param name="extension">The file extension</param>
-        /// <param name="contentType">The content type</param>
-        /// <param name="allowProcessing">If image processing should be allowed</param>
-        public void Add(string extension, string contentType, bool? allowProcessing = null)
-        {
-            Add(new MediaTypeItem
-            {
-                Extension = extension.ToLower(),
-                ContentType = contentType,
-                AllowProcessing = allowProcessing ?? _allowProcessing
-            });
-        }
-
-        /// <summary>
-        /// Gets if the list contains an item with the given extension.
-        /// </summary>
-        /// <param name="extension">The file extension</param>
-        /// <returns>If the extension exists</returns>
-        public bool ContainsExtension(string extension)
-        {
-            return this.Any(t => t.Extension.Equals(extension, System.StringComparison.OrdinalIgnoreCase));
-        }
-    }
-
     /// <summary>
     /// Gets/sets the currently accepted document extensions.
     /// </summary>
@@ -141,7 +78,6 @@ public class MediaManager
         {
             return MediaType.Document;
         }
-
         if (Images.ContainsExtension(extension))
         {
             return MediaType.Image;
@@ -158,7 +94,6 @@ public class MediaManager
         {
             return MediaType.Resource;
         }
-
         return MediaType.Unknown;
     }
 
@@ -177,7 +112,6 @@ public class MediaManager
         {
             return item.ContentType;
         }
-
         if ((item = Images.SingleOrDefault(t => t.Extension == extension)) != null)
         {
             return item.ContentType;
@@ -194,7 +128,6 @@ public class MediaManager
         {
             return item.ContentType;
         }
-
         return "application/octet-stream";
     }
 
@@ -212,7 +145,6 @@ public class MediaManager
         {
             return item;
         }
-
         if ((item = Images.SingleOrDefault(t => t.Extension == extension)) != null)
         {
             return item;
@@ -229,7 +161,6 @@ public class MediaManager
         {
             return item;
         }
-
         return null;
     }
 }

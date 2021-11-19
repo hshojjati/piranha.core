@@ -19,6 +19,7 @@ using Piranha.Extend;
 using Piranha.Extend.Fields;
 using Piranha.Models;
 using Piranha.Manager.Models;
+using Piranha.Manager.Models.ContentModels;
 using Piranha.Services;
 
 namespace Piranha.Manager.Services;
@@ -60,7 +61,7 @@ public class ContentService
             Group = group,
             Groups = groups,
             Items = items
-                .Select(i => new ContentListModel.ContentItem
+                .Select(i => new ContentListItem
                 {
                     Id = i.Id,
                     Title = i.Title,

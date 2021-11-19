@@ -40,16 +40,7 @@ public class SelectFieldSerializer<T> : ISerializer where T : Fields.SelectField
 
         if (!string.IsNullOrWhiteSpace(str))
         {
-            try
-            {
-                field.EnumValue = str;
-            }
-            catch
-            {
-                // Let's not throw an exception, let's just
-                // return a new empty field.
-                field.EnumValue = null;
-            }
+            field.EnumValue = str;
         }
         return field;
     }

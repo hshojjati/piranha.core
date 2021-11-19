@@ -9,6 +9,7 @@
  */
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Piranha.AttributeBuilder;
 
@@ -16,6 +17,7 @@ namespace Piranha.AttributeBuilder;
 /// Attribute for adding a route to a page type.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
+[SuppressMessage("Microsoft.Design", "CA1019", Justification = "Public API")]
 public class PageTypeArchiveItemAttribute : Attribute
 {
     /// <summary>

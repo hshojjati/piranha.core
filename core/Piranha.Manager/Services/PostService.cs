@@ -21,6 +21,7 @@ using Piranha.Manager.Extensions;
 using Piranha.Models;
 using Piranha.Manager.Models;
 using Piranha.Manager.Models.Content;
+using Piranha.Manager.Models.PostModels;
 using Piranha.Services;
 
 namespace Piranha.Manager.Services;
@@ -54,7 +55,7 @@ public class PostService
 
         // Get the sites available
         model.Sites = (await _api.Sites.GetAllAsync())
-            .Select(s => new PostModalModel.SiteItem
+            .Select(s => new PostModalSiteItem
             {
                 Id = s.Id,
                 Title = s.Title
@@ -71,7 +72,7 @@ public class PostService
 
         // Get the blogs available
         model.Archives = (await _api.Pages.GetAllBlogsAsync<PageInfo>(siteId.Value))
-            .Select(p => new PostModalModel.ArchiveItem
+            .Select(p => new PostModalArchiveItem
             {
                 Id = p.Id,
                 Title = p.Title,
@@ -98,7 +99,7 @@ public class PostService
 
             // Get the available posts
             model.Posts = (await _api.Posts.GetAllAsync<PostInfo>(archiveId.Value))
-                .Select(p => new PostModalModel.PostModalItem
+                .Select(p => new PostModalItem
                 {
                     Id = p.Id,
                     Title = p.Title,
@@ -133,7 +134,7 @@ public class PostService
 
         var model = new PostListModel
         {
-            PostTypes = App.PostTypes.Select(t => new PostListModel.PostTypeItem
+            PostTypes = App.PostTypes.Select(t => new PostListTypeItem
             {
                 Id = t.Id,
                 Title = t.Title,
@@ -159,7 +160,7 @@ public class PostService
 
         // Get posts
         model.Posts = (await _api.Posts.GetAllAsync<PostInfo>(archiveId, index, pageSize))
-            .Select(p => new PostListModel.PostItem
+            .Select(p => new PostListItem
             {
                 Id = p.Id.ToString(),
                 Title = p.Title,
@@ -173,7 +174,7 @@ public class PostService
 
         // Get categories
         model.Categories = (await _api.Posts.GetAllCategoriesAsync(archiveId))
-            .Select(c => new PostListModel.CategoryItem
+            .Select(c => new PostListCategoryItem
             {
                 Id = c.Id.ToString(),
                 Title = c.Title

@@ -21,7 +21,7 @@ namespace Piranha.Services;
 public class SiteService : ISiteService
 {
     [Serializable]
-    public class SiteMapping
+    private class SiteMapping
     {
         public Guid Id { get; set; }
         public string Hostnames { get; set; }

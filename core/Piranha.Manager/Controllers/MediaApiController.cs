@@ -11,11 +11,14 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Piranha.Manager.Models;
+using Piranha.Manager.Models.MediaModels;
 using Piranha.Manager.Services;
 using Piranha.Models;
 
@@ -34,12 +37,14 @@ public class MediaApiController : Controller
     private readonly MediaService _service;
     private readonly IApi _api;
     private readonly ManagerLocalizer _localizer;
+    private readonly ILogger _logger;
 
-    public MediaApiController(MediaService service, IApi api, ManagerLocalizer localizer)
+    public MediaApiController(MediaService service, IApi api, ManagerLocalizer localizer, ILoggerFactory factory = null)
     {
         _service = service;
         _api = api;
         _localizer = localizer;
+        _logger = factory?.CreateLogger<MediaApiController>();
     }
 
     /// <summary>
@@ -103,7 +108,7 @@ public class MediaApiController : Controller
     /// <param name="model">The media model</param>
     [Route("meta/save")]
     [HttpPost]
-    public async Task<IActionResult> SaveMeta(MediaListModel.MediaItem model)
+    public async Task<IActionResult> SaveMeta(MediaListItem model)
     {
         if (await _service.SaveMeta(model))
         {
@@ -126,6 +131,7 @@ public class MediaApiController : Controller
     [Route("folder/save")]
     [HttpPost]
     [Authorize(Policy = Permission.MediaAddFolder)]
+    [SuppressMessage("Microsoft.Design", "CA1031", Justification = "Logging should catch all exceptions")]
     public async Task<IActionResult> SaveFolder(MediaFolderModel model, MediaType? filter = null)
     {
         try
@@ -152,11 +158,22 @@ public class MediaApiController : Controller
             };
             return BadRequest(result);
         }
+        catch (Exception e)
+        {
+            _logger?.LogError("SaveFolder() {Message}", e.Message);
+
+            return BadRequest(new StatusMessage
+            {
+                Type = StatusMessage.Error,
+                Body = e.Message
+            });
+        }
     }
 
     [Route("folder/delete")]
     [HttpDelete]
     [Authorize(Policy = Permission.MediaDeleteFolder)]
+    [SuppressMessage("Microsoft.Design", "CA1031", Justification = "Logging should catch all exceptions")]
     public async Task<IActionResult> DeleteFolder([FromBody] Guid id)
     {
         try
@@ -183,6 +200,16 @@ public class MediaApiController : Controller
             };
             return BadRequest(result);
         }
+        catch (Exception e)
+        {
+            _logger?.LogError("DeleteFolder() {Message}", e.Message);
+
+            return BadRequest(new StatusMessage
+            {
+                Type = StatusMessage.Error,
+                Body = e.Message
+            });
+        }
     }
 
     /// <summary>
@@ -193,6 +220,7 @@ public class MediaApiController : Controller
     [HttpPost]
     [Consumes("multipart/form-data")]
     [Authorize(Policy = Permission.MediaAdd)]
+    [SuppressMessage("Microsoft.Design", "CA1031", Justification = "Logging should catch all exceptions")]
     public async Task<IActionResult> Upload([FromForm] MediaUploadModel model)
     {
         // Allow for dropzone uploads
@@ -232,6 +260,8 @@ public class MediaApiController : Controller
         }
         catch (Exception e)
         {
+            _logger?.LogError("Upload() {Message}", e.Message);
+
             return BadRequest(new StatusMessage
             {
                 Type = StatusMessage.Error,
@@ -244,6 +274,7 @@ public class MediaApiController : Controller
     [HttpPost]
     [Consumes("application/json")]
     [Authorize(Policy = Permission.MediaEdit)]
+    [SuppressMessage("Microsoft.Design", "CA1031", Justification = "Logging should catch all exceptions")]
     public async Task<IActionResult> Move([FromBody] IEnumerable<Guid> items, Guid? folderId)
     {
         try
@@ -291,6 +322,8 @@ public class MediaApiController : Controller
         }
         catch (Exception e)
         {
+            _logger?.LogError("Move() {Message}", e.Message);
+
             return BadRequest(new StatusMessage
             {
                 Type = StatusMessage.Error,
@@ -303,6 +336,7 @@ public class MediaApiController : Controller
     [HttpDelete]
     [Consumes("application/json")]
     [Authorize(Policy = Permission.MediaDelete)]
+    [SuppressMessage("Microsoft.Design", "CA1031", Justification = "Logging should catch all exceptions")]
     public async Task<IActionResult> Delete([FromBody] IEnumerable<Guid> items)
     {
         try
@@ -320,6 +354,16 @@ public class MediaApiController : Controller
         }
         catch (ValidationException e)
         {
+            return BadRequest(new StatusMessage
+            {
+                Type = StatusMessage.Error,
+                Body = e.Message
+            });
+        }
+        catch (Exception e)
+        {
+            _logger?.LogError("Delete() {Message}", e.Message);
+
             return BadRequest(new StatusMessage
             {
                 Type = StatusMessage.Error,

@@ -13,7 +13,7 @@ namespace Piranha.Manager.Models;
 /// <summary>
 /// Status message to pass from an api to the manager interface.
 /// </summary>
-public class StatusMessage
+public sealed class StatusMessage
 {
     public static readonly string Error = "danger";
     public static readonly string Information = "info";

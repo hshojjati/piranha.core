@@ -11,7 +11,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Piranha.Manager.Models;
+using Piranha.Manager.Models.LanguageModels;
 using Piranha.Models;
 
 namespace Piranha.Manager.Services;

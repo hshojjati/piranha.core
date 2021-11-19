@@ -12,7 +12,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Piranha.Models;
-using Piranha.Manager.Models;
+using Piranha.Manager.Models.AliasModels;
 
 namespace Piranha.Manager.Services;
 
@@ -59,7 +59,7 @@ public class AliasService
 
         // Get all available sites
         var sites = await _api.Sites.GetAllAsync();
-        model.Sites = sites.Select(s => new AliasListModel.AliasSite
+        model.Sites = sites.Select(s => new AliasListSiteItem
         {
             Id = s.Id,
             Title = s.Title
@@ -67,7 +67,7 @@ public class AliasService
 
         // Get all available aliases for the current site
         var aliases = await _api.Aliases.GetAllAsync(siteId.Value);
-        model.Items = aliases.Select(a => new AliasListModel.AliasItem
+        model.Items = aliases.Select(a => new AliasListItem
         {
             Id = a.Id,
             SiteId = a.SiteId,
@@ -83,7 +83,7 @@ public class AliasService
     /// Saves the given alias.
     /// </summary>
     /// <param name="model">The alias</param>
-    public async Task Save(AliasListModel.AliasItem model)
+    public async Task Save(AliasListItem model)
     {
         await _api.Aliases.SaveAsync(new Alias
         {
@@ -100,7 +100,7 @@ public class AliasService
     /// </summary>
     /// <param name="id">The unique id</param>
     /// <returns>The deleted alias</returns>
-    public async Task<AliasListModel.AliasItem> Delete(Guid id)
+    public async Task<AliasListItem> Delete(Guid id)
     {
         var alias = await _api.Aliases.GetByIdAsync(id);
 
@@ -108,7 +108,7 @@ public class AliasService
         {
             await _api.Aliases.DeleteAsync(alias);
 
-            return new AliasListModel.AliasItem
+            return new AliasListItem
             {
                 Id = alias.Id,
                 SiteId = alias.SiteId,

@@ -9,7 +9,7 @@
  */
 
 using System.Linq;
-using Piranha.Manager.Models;
+using Piranha.Manager.Models.ModuleModels;
 
 namespace Piranha.Manager.Services;
 
@@ -26,7 +26,7 @@ public class ModuleService
             Items = App.Modules
                 .OrderBy(m => m.Instance.Author)
                 .ThenBy(m => m.Instance.Name)
-                .Select(m => new ModuleListModel.ModuleItem
+                .Select(m => new ModuleListItem
                 {
                     Author = m.Instance.Author,
                     Name = m.Instance.Name,

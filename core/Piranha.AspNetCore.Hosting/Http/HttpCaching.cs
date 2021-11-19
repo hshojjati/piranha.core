@@ -60,7 +60,7 @@ public static class HttpCaching
             {
                 info.LastModified = DateTime.Parse(lastMod);
             }
-            catch
+            catch (FormatException)
             {
                 info.LastModified = null;
             }

@@ -9,6 +9,7 @@
  */
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,6 +22,7 @@ using Piranha.Services;
 
 namespace Piranha.Tests
 {
+    [SuppressMessage("Microsoft.Design", "CA1034", Justification = "Test code. Not important for the packages.")]
     public class Fields : BaseTests
     {
         [FieldType(Name = "First", Shorthand = "1")]

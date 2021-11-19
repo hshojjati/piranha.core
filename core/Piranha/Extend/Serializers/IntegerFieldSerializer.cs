@@ -47,7 +47,7 @@ public class IntegerFieldSerializer<T> : ISerializer where T : Fields.SimpleFiel
             {
                 field.Value = int.Parse(str);
             }
-            catch
+            catch (FormatException)
             {
                 // Let's not throw an exception, let's just
                 // return a new empty field.

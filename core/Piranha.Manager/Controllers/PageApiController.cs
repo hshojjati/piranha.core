@@ -10,11 +10,15 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
 using Piranha.Manager.Models;
+using Piranha.Manager.Models.PageModels;
+using Piranha.Manager.Models.SiteModels;
 using Piranha.Manager.Services;
 
 namespace Piranha.Manager.Controllers;
@@ -34,17 +38,20 @@ public class PageApiController : Controller
     private readonly ManagerLocalizer _localizer;
     private readonly IHubContext<Hubs.PreviewHub> _hub;
     private readonly IAuthorizationService _auth;
+    private readonly ILogger _logger;
 
     /// <summary>
     /// Default constructor.
     /// </summary>
-    public PageApiController(PageService service, IApi api, ManagerLocalizer localizer, IHubContext<Hubs.PreviewHub> hub, IAuthorizationService auth)
+    public PageApiController(PageService service, IApi api, ManagerLocalizer localizer, IHubContext<Hubs.PreviewHub> hub, 
+        IAuthorizationService auth, ILoggerFactory factory = null)
     {
         _service = service;
         _api = api;
         _localizer = localizer;
         _hub = hub;
         _auth = auth;
+        _logger = factory?.CreateLogger<PageApiController>();
     }
 
     /// <summary>
@@ -275,6 +282,7 @@ public class PageApiController : Controller
     [Route("delete")]
     [HttpDelete]
     [Authorize(Policy = Permission.PagesDelete)]
+    [SuppressMessage("Microsoft.Design", "CA1031", Justification = "Logging should catch all exceptions")]
     public async Task<StatusMessage> Delete([FromBody] Guid id)
     {
         try
@@ -290,8 +298,10 @@ public class PageApiController : Controller
                 Body = e.Message
             };
         }
-        catch
+        catch (Exception e)
         {
+            _logger?.LogError("Delete() {Message}", e.Message);
+
             return new StatusMessage
             {
                 Type = StatusMessage.Error,

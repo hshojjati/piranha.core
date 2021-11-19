@@ -10,119 +10,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using Piranha.Models;
+using Piranha.Runtime.Hooks;
 
 namespace Piranha.Runtime;
 
 public sealed class HookManager
 {
-    /// <summary>
-    /// The standard repository hooks for a data model.
-    /// </summary>
-    public class ServiceHooks<T>
-    {
-        /// <summary>
-        /// Registers a new hook to be executed after the model
-        /// has been loaded but BEFORE it has been added into
-        /// the cache.
-        /// </summary>
-        /// <param name="hook">The hook</param>
-        public void RegisterOnLoad(ModelDelegate<T> hook)
-        {
-            App.Hooks.RegisterOnLoad(hook);
-        }
-
-        /// <summary>
-        /// Registers a new hook to be executed before the model
-        /// is saved to the database.
-        /// </summary>
-        /// <param name="hook">The hook</param>
-        public void RegisterOnBeforeSave(ModelDelegate<T> hook)
-        {
-            App.Hooks.RegisterOnBeforeSave(hook);
-        }
-
-        /// <summary>
-        /// Registers a new hook to be executed after the model
-        /// is saved to the database.
-        /// </summary>
-        /// <param name="hook">The hook</param>
-        public void RegisterOnAfterSave(ModelDelegate<T> hook)
-        {
-            App.Hooks.RegisterOnAfterSave(hook);
-        }
-
-        /// <summary>
-        /// Registers a new hook to be executed before the model
-        /// is deleted from the database.
-        /// </summary>
-        /// <param name="hook">The hook</param>
-        public void RegisterOnBeforeDelete(ModelDelegate<T> hook)
-        {
-            App.Hooks.RegisterOnBeforeDelete(hook);
-        }
-
-        /// <summary>
-        /// Registers a new hook to be executed after the model
-        /// is deleted from the database.
-        /// </summary>
-        /// <param name="hook">The hook</param>
-        public void RegisterOnAfterDelete(ModelDelegate<T> hook)
-        {
-            App.Hooks.RegisterOnAfterDelete(hook);
-        }
-
-        /// <summary>
-        /// Removes all registered hooks.
-        /// </summary>
-        public void Clear()
-        {
-            App.Hooks.Clear<T>();
-        }
-    }
-
-    public class ValidationServiceHooks<T> : ServiceHooks<T>
-    {
-        /// <summary>
-        /// Registers a new hook to be executed after the OnBeforeSave
-        /// hook as been executed but before the model is saved to the
-        /// database. This hook should be used to extend default model
-        /// validation.
-        /// </summary>
-        /// <param name="hook">The hook</param>
-        public void RegisterOnValidate(ModelDelegate<T> hook)
-        {
-            App.Hooks.RegisterOnValidate<T>(hook);
-        }
-    }
-
-    public class SitemapServiceHooks
-    {
-        /// <summary>
-        /// Registers a new hook to be executed after the sitemap
-        /// has been loaded but BEFORE it has been added into
-        /// the cache.
-        /// </summary>
-        /// <param name="hook">The hook</param>
-        [SuppressMessage("Ignored", "CA1822", Justification = "Public API")]
-        public void RegisterOnLoad(ModelDelegate<Sitemap> hook)
-        {
-            App.Hooks.RegisterOnLoad(hook);
-        }
-
-        /// <summary>
-        /// Registers a new hook to be executed when the sitemap
-        /// is invalidated due to a change in the site structure.
-        /// </summary>
-        /// <param name="hook">The hook</param>
-        [SuppressMessage("Ignored", "CA1822", Justification = "Public API")]
-        public void RegisterOnInvalidate(ModelDelegate<Sitemap> hook)
-        {
-            App.Hooks.RegisterOnBeforeDelete(hook);
-        }
-    }
-
     //
     // Private hook collections.
     //
@@ -165,7 +59,7 @@ public sealed class HookManager
     /// <summary>
     /// Gets the hooks available for media.
     /// </summary>
-    public ServiceHooks<Media> Media { get; } = new ServiceHooks<Media>();
+    public ServiceHooks<Models.Media> Media { get; } = new ServiceHooks<Models.Media>();
 
     /// <summary>
     /// Gets the hooks available for media folders.

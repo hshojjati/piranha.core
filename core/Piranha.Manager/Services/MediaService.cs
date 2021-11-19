@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Piranha.Models;
 using Piranha.Manager.Models;
+using Piranha.Manager.Models.MediaModels;
 using System.IO;
 using System.Collections.Generic;
 using System.Data;
@@ -37,13 +38,13 @@ public class MediaService
     /// </summary>
     /// <param name="id">Media id</param>
     /// <returns>Model</returns>
-    public async Task<MediaListModel.MediaItem> GetById(Guid id)
+    public async Task<MediaListItem> GetById(Guid id)
     {
         var media = await _api.Media.GetByIdAsync(id);
         if (media == null)
             return null;
 
-        return new MediaListModel.MediaItem
+        return new MediaListItem
         {
             Id = media.Id,
             FolderId = media.FolderId,
@@ -161,7 +162,7 @@ public class MediaService
         var pairMedia = holdMedia.Select(m => new
         {
             media = m,
-            mediaItem = new MediaListModel.MediaItem
+            mediaItem = new MediaListItem
             {
                 Id = m.Id,
                 FolderId = m.FolderId,
@@ -181,7 +182,7 @@ public class MediaService
         }).ToArray();
 
         model.Folders = model.Structure.GetPartial(folderId)
-            .Select(f => new MediaListModel.FolderItem
+            .Select(f => new MediaListFolderItem
             {
                 Id = f.Id,
                 Name = f.Name,
@@ -273,7 +274,7 @@ public class MediaService
     /// </summary>
     /// <param name="media">The media asset</param>
     /// <returns>If the meta information was updated successful</returns>
-    public async Task<bool> SaveMeta(MediaListModel.MediaItem media)
+    public async Task<bool> SaveMeta(MediaListItem media)
     {
         var model = await _api.Media.GetByIdAsync(media.Id);
 

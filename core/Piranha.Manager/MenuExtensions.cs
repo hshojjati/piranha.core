@@ -14,6 +14,9 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Piranha.Manager;
 
+/// <summary>
+/// Extension methods for the manager menu.
+/// </summary>
 public static class MenuExtensions
 {
     /// <summary>

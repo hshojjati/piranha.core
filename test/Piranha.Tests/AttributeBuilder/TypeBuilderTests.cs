@@ -9,6 +9,7 @@
  */
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -19,6 +20,8 @@ using Piranha.Models;
 namespace Piranha.Tests.AttributeBuilder
 {
     [Collection("Integration tests")]
+    [SuppressMessage("Microsoft.Design", "CA1034", Justification = "Test code. Not important for the packages.")]
+
     public class TypeBuilderTests : BaseTestsAsync
     {
         [ContentGroup(Title = "My Content")]

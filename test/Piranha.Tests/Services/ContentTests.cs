@@ -9,6 +9,7 @@
  */
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
@@ -41,6 +42,7 @@ namespace Piranha.Tests.Services
     }
 
     [Collection("Integration tests")]
+    [SuppressMessage("Microsoft.Design", "CA1034", Justification = "Test code. Not important for the packages.")]
     public class ContentTests : BaseTestsAsync
     {
         private readonly Guid ID_1 = Guid.NewGuid();

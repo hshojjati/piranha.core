@@ -9,6 +9,7 @@
  */
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Piranha.Extend;
 
@@ -18,6 +19,7 @@ public class BlockItemTypeAttribute : Attribute
     /// <summary>
     /// Gets/sets the type of the accepted child item.
     /// </summary>
+    [SuppressMessage("Microsoft.Design", "CA1019", Justification = "Public API")]
     public Type Type { get; set; }
 
     /// <summary>

@@ -8,7 +8,6 @@
  *
  */
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -18,10 +17,10 @@ public class RoleListModel
 {
     public RoleListModel()
     {
-        Roles = new List<ListItem>();
+        Roles = new List<RoleListItem>();
     }
 
-    public IList<ListItem> Roles { get; set; }
+    public IList<RoleListItem> Roles { get; set; }
 
     public static RoleListModel Get(IDb db)
     {
@@ -29,7 +28,7 @@ public class RoleListModel
         {
             Roles = db.Roles
                 .OrderBy(r => r.Name)
-                .Select(r => new ListItem
+                .Select(r => new RoleListItem
                 {
                     Id = r.Id,
                     Name = r.Name
@@ -42,12 +41,5 @@ public class RoleListModel
                 .Count(r => r.RoleId == role.Id);
         }
         return model;
-    }
-
-    public class ListItem
-    {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public int UserCount { get; set; }
     }
 }

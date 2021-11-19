@@ -8,10 +8,10 @@
  *
  */
 
-using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Piranha.Manager.LocalAuth.Models;
 
 namespace Piranha.Manager.LocalAuth.Areas.Manager.Pages
 {
@@ -39,7 +39,7 @@ namespace Piranha.Manager.LocalAuth.Areas.Manager.Pages
         /// </summary>
         /// <value></value>
         [BindProperty]
-        public InputModel Input { get; set; }
+        public LoginInputModel Input { get; set; }
 
         /// <summary>
         /// Gets/sets the optional return url after successful
@@ -53,25 +53,6 @@ namespace Piranha.Manager.LocalAuth.Areas.Manager.Pages
         /// </summary>
         [TempData]
         public string ErrorMessage { get; set; }
-
-        /// <summary>
-        /// Model for form data.
-        /// </summary>
-        public class InputModel
-        {
-            /// <summary>
-            /// Gets/sets the user name.
-            /// </summary>
-            [Required]
-            public string Username { get; set; }
-
-            /// <summary>
-            /// Gets/sets the password.
-            /// </summary>
-            [Required]
-            [DataType(DataType.Password)]
-            public string Password { get; set; }
-        }
 
         /// <summary>
         /// Gets the login page.

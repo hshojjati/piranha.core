@@ -40,16 +40,7 @@ public class DataSelectFieldSerializer<T> : ISerializer where T : Fields.DataSel
 
         if (!string.IsNullOrWhiteSpace(str))
         {
-            try
-            {
-                field.Id = str;
-            }
-            catch
-            {
-                // Let's not throw an exception, let's just
-                // return a new empty field.
-                field.Id = null;
-            }
+            field.Id = str;
         }
         return field;
     }

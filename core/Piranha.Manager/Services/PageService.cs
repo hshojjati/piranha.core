@@ -21,6 +21,8 @@ using Piranha.Manager.Extensions;
 using Piranha.Models;
 using Piranha.Manager.Models;
 using Piranha.Manager.Models.Content;
+using Piranha.Manager.Models.PageModels;
+using Piranha.Manager.Models.SiteModels;
 using Piranha.Services;
 
 namespace Piranha.Manager.Services;
@@ -54,7 +56,7 @@ public class PageService
         {
             Sites = (await _api.Sites.GetAllAsync())
                 .OrderByDescending(s => s.IsDefault)
-                .Select(s => new PageListModel.PageSite
+                .Select(s => new PageListSiteItem
                 {
                     Id = s.Id,
                     Title = s.Title,
@@ -85,9 +87,9 @@ public class PageService
     /// </summary>
     /// <param name="siteId">The site id</param>
     /// <returns>The structure</returns>
-    public async Task<List<PageListModel.PageItem>> GetPageStructure(Guid siteId)
+    public async Task<List<PageListItem>> GetPageStructure(Guid siteId)
     {
-        var pages = new List<PageListModel.PageItem>();
+        var pages = new List<PageListItem>();
 
         // Get the configured expanded levels
         var expandedLevels = 0;
@@ -122,7 +124,7 @@ public class PageService
             SiteTitle = site.Title,
             Sites = (await _api.Sites.GetAllAsync())
                 .OrderByDescending(s => s.IsDefault)
-                .Select(s => new PageListModel.PageSite
+                .Select(s => new PageListSiteItem
                 {
                     Id = s.Id,
                     Title = s.Title,
@@ -500,7 +502,7 @@ public class PageService
         return false;
     }
 
-    private Tuple<Guid?, int> GetPosition(Guid id, IList<StructureModel.StructureItem> items, Guid? parentId = null)
+    private Tuple<Guid?, int> GetPosition(Guid id, IList<StructureItem> items, Guid? parentId = null)
     {
         for (var n = 0; n < items.Count; n++)
         {
@@ -521,17 +523,17 @@ public class PageService
         return null;
     }
 
-    private PageListModel.PageItem MapRecursive(Guid siteId, SitemapItem item, int level, int expandedLevels, IEnumerable<Guid> drafts)
+    private PageListItem MapRecursive(Guid siteId, SitemapItem item, int level, int expandedLevels, IEnumerable<Guid> drafts)
     {
-        var model = new PageListModel.PageItem
+        var model = new PageListItem
         {
             Id = item.Id,
             SiteId = siteId,
             Title = item.MenuTitle,
             TypeName = item.PageTypeName,
             Published = item.Published.HasValue ? item.Published.Value.ToString("yyyy-MM-dd") : null,
-            Status = drafts.Contains(item.Id) ? _localizer.General[PageListModel.PageItem.Draft] :
-                !item.Published.HasValue ? _localizer.General[PageListModel.PageItem.Unpublished] : "",
+            Status = drafts.Contains(item.Id) ? _localizer.General[PageListItem.Draft] :
+                !item.Published.HasValue ? _localizer.General[PageListItem.Unpublished] : "",
             EditUrl = "manager/page/edit/",
             IsExpanded = level < expandedLevels,
             IsCopy = item.OriginalPageId.HasValue,

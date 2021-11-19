@@ -9,6 +9,7 @@
  */
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Piranha.Extend;
 
@@ -22,6 +23,7 @@ public class FieldDescriptionAttribute : Attribute
     /// <summary>
     /// Gets/sets the optional description text.
     /// </summary>
+    [SuppressMessage("Microsoft.Design", "CA1019", Justification = "Public API")]
     public string Text { get; set; }
 
     /// <summary>

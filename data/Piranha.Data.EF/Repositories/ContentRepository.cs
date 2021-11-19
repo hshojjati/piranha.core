@@ -530,7 +530,7 @@ public class ContentRepository : IContentRepository
                 ContentId = contentId,
                 Translations = languages
                     .Where(l => !l.IsDefault)
-                    .Select(l => new Models.TranslationStatus.TranslationStatusItem
+                    .Select(l => new Models.TranslationStatusItem
                     {
                         LanguageId = l.Id,
                         LanguageTitle = l.Title

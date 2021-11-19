@@ -16,6 +16,7 @@ using Piranha.Extend;
 using Piranha.Extend.Fields;
 using Piranha.Models;
 using Piranha.Manager.Models;
+using Piranha.Manager.Models.BlockModels;
 using Piranha.Manager.Models.Content;
 using Piranha.Services;
 
@@ -102,7 +103,7 @@ public class ContentTypeService
 
         foreach (var category in App.Blocks.GetCategories().OrderBy(c => c))
         {
-            var listCategory = new BlockListModel.ListCategory
+            var listCategory = new BlockListCategoryItem
             {
                 Name = category
             };
@@ -136,7 +137,7 @@ public class ContentTypeService
 
             foreach (var block in items)
             {
-                listCategory.Items.Add(new BlockListModel.BlockItem
+                listCategory.Items.Add(new BlockListItem
                 {
                     Name = block.Name,
                     Icon = block.Icon,

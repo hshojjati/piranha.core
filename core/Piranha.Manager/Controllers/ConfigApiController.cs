@@ -8,9 +8,13 @@
  *
  */
 
+using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Piranha.Manager.Models;
+using Piranha.Manager.Models.ConfigModels;
 using Piranha.Manager.Services;
 
 namespace Piranha.Manager.Controllers;
@@ -26,13 +30,15 @@ namespace Piranha.Manager.Controllers;
 public class ConfigApiController : Controller
 {
     private readonly ConfigService _service;
+    private readonly ILogger _logger;
 
     /// <summary>
     /// Default constructor.
     /// </summary>
-    public ConfigApiController(ConfigService service)
+    public ConfigApiController(ConfigService service, ILoggerFactory factory = null)
     {
         _service = service;
+        _logger = factory?.CreateLogger<ConfigApiController>();
     }
 
     /// <summary>
@@ -42,7 +48,7 @@ public class ConfigApiController : Controller
     [Route("")]
     [HttpGet]
     [Authorize(Policy = Permission.Config)]
-    public ConfigModel List()
+    public ConfigEditModel List()
     {
         return _service.Get();
     }
@@ -54,14 +60,17 @@ public class ConfigApiController : Controller
     [Route("save")]
     [HttpPost]
     [Authorize(Policy = Permission.ConfigEdit)]
-    public AsyncResult Save(ConfigModel model)
+    [SuppressMessage("Microsoft.Design", "CA1031", Justification = "Logging should catch all exceptions")]
+    public AsyncResult Save(ConfigEditModel model)
     {
         try
         {
             _service.Save(model);
         }
-        catch
+        catch (Exception e)
         {
+            _logger?.LogError("Save() {Message}", e.Message);
+
             return new AsyncResult
             {
                 Status = new StatusMessage

@@ -20,29 +20,6 @@ namespace Piranha.Models;
 public class TranslationStatus
 {
     /// <summary>
-    /// An translation status item.
-    /// </summary>
-    [Serializable]
-    public class TranslationStatusItem
-    {
-        /// <summary>
-        /// Gets/sets the languge id.
-        /// </summary>
-        public Guid LanguageId { get; set; }
-
-        /// <summary>
-        /// Gets/sets the language title.
-        /// </summary>
-        public string LanguageTitle { get; set; }
-
-        /// <summary>
-        /// Gets/sets if the language is up to date with the
-        /// default master language.
-        /// </summary>
-        public bool IsUpToDate { get; set; }
-    }
-
-    /// <summary>
     /// Gets/sets the unique content id.
     /// </summary>
     public Guid ContentId { get; set; }

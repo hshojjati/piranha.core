@@ -386,7 +386,7 @@ public class RoutingMiddleware : MiddlewareBase
                                     query.Append("&pagenum=");
                                     query.Append(pageNum);
                                 }
-                                catch
+                                catch (FormatException)
                                 {
                                     // We don't care about the exception, we just
                                     // discard malformed input
@@ -408,7 +408,7 @@ public class RoutingMiddleware : MiddlewareBase
                                     query.Append("&year=");
                                     query.Append(year);
                                 }
-                                catch
+                                catch (FormatException)
                                 {
                                     // We don't care about the exception, we just
                                     // discard malformed input
@@ -422,7 +422,7 @@ public class RoutingMiddleware : MiddlewareBase
                                     query.Append("&month=");
                                     query.Append(month);
                                 }
-                                catch
+                                catch (FormatException)
                                 {
                                     // We don't care about the exception, we just
                                     // discard malformed input

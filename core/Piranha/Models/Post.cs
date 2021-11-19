@@ -27,7 +27,7 @@ public class Post<T> : PostBase where T : Post<T>
     /// <param name="api">The current api</param>
     /// <param name="typeId">The unique post type id</param>
     /// <returns>The new model</returns>
-    [SuppressMessage("Design", "CA1000", Justification = "Public API")]
+    [SuppressMessage("Microsoft.Design", "CA1000", Justification = "Public API")]
     public static Task<T> CreateAsync(IApi api, string typeId = null)
     {
         return api.Posts.CreateAsync<T>(typeId);

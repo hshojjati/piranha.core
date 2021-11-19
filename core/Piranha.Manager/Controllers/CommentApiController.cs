@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Piranha.Manager.Models;
+using Piranha.Manager.Models.CommentModels;
 using Piranha.Manager.Services;
 
 namespace Piranha.Manager.Controllers;
@@ -27,12 +28,6 @@ namespace Piranha.Manager.Controllers;
 [AutoValidateAntiforgeryToken]
 public class CommentApiController : Controller
 {
-    public class ApprovalModel
-    {
-        public Guid Id { get; set; }
-        public Guid? ParentId { get; set; }
-    }
-
     private readonly CommentService _service;
     private readonly ManagerLocalizer _localizer;
 
@@ -60,7 +55,7 @@ public class CommentApiController : Controller
     [Route("approve")]
     [HttpPost]
     [Authorize(Policy = Permission.CommentsApprove)]
-    public async Task<CommentListModel> Approve(ApprovalModel model)
+    public async Task<CommentListModel> Approve(CommentApprovalModel model)
     {
         await _service.ApproveAsync(model.Id).ConfigureAwait(false);
 
@@ -77,7 +72,7 @@ public class CommentApiController : Controller
     [Route("unapprove")]
     [HttpPost]
     [Authorize(Policy = Permission.CommentsApprove)]
-    public async Task<CommentListModel> UnApprove(ApprovalModel model)
+    public async Task<CommentListModel> UnApprove(CommentApprovalModel model)
     {
         await _service.UnApproveAsync(model.Id).ConfigureAwait(false);
 

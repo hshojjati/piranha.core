@@ -10,11 +10,14 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
 using Piranha.Manager.Models;
+using Piranha.Manager.Models.PostModels;
 using Piranha.Manager.Services;
 
 namespace Piranha.Manager.Controllers;
@@ -33,16 +36,19 @@ public class PostApiController : Controller
     private readonly IApi _api;
     private readonly ManagerLocalizer _localizer;
     private readonly IHubContext<Hubs.PreviewHub> _hub;
+    private readonly ILogger _logger;
 
     /// <summary>
     /// Default constructor.
     /// </summary>
-    public PostApiController(PostService service, IApi api, ManagerLocalizer localizer, IHubContext<Hubs.PreviewHub> hub)
+    public PostApiController(PostService service, IApi api, ManagerLocalizer localizer, 
+        IHubContext<Hubs.PreviewHub> hub, ILoggerFactory factory = null)
     {
         _service = service;
         _api = api;
         _localizer = localizer;
         _hub = hub;
+        _logger = factory?.CreateLogger<PostApiController>();
     }
 
     /// <summary>
@@ -197,6 +203,7 @@ public class PostApiController : Controller
     [Route("delete")]
     [HttpDelete]
     [Authorize(Policy = Permission.PostsDelete)]
+    [SuppressMessage("Microsoft.Design", "CA1031", Justification = "Logging should catch all exceptions")]
     public async Task<StatusMessage> Delete([FromBody] Guid id)
     {
         try
@@ -212,8 +219,10 @@ public class PostApiController : Controller
                 Body = e.Message
             };
         }
-        catch
+        catch (Exception e)
         {
+            _logger?.LogError("Delete() {Message}", e.Message);
+
             return new StatusMessage
             {
                 Type = StatusMessage.Error,
@@ -234,6 +243,7 @@ public class PostApiController : Controller
     /// <param name="model">The model</param>
     /// <param name="draft">If the page should be saved as a draft</param>
     /// <returns>The result of the operation</returns>
+    [SuppressMessage("Microsoft.Design", "CA1031", Justification = "Logging should catch all exceptions")]
     private async Task<PostEditModel> Save(PostEditModel model, bool draft = false)
     {
         try
@@ -247,19 +257,19 @@ public class PostApiController : Controller
                 Type = StatusMessage.Error,
                 Body = e.Message
             };
-
             return model;
         }
-        /*
-        catch
+        catch (Exception e)
         {
-            return new StatusMessage
+            _logger?.LogError("Save() {Message}", e.Message);
+
+            model.Status = new StatusMessage
             {
                 Type = StatusMessage.Error,
                 Body = "An error occured while saving the page"
             };
+            return model;
         }
-        */
 
         var ret = await _service.GetById(model.Id);
         ret.Status = new StatusMessage

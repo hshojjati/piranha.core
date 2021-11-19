@@ -10,17 +10,20 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Piranha.AspNetCore.Identity.Data;
 using Piranha.AspNetCore.Identity.Models;
 using Piranha.Manager;
 using Piranha.Manager.Controllers;
 using Piranha.Manager.Models;
+using Piranha.Manager.Models.AliasModels;
 
 namespace Piranha.AspNetCore.Identity.Controllers;
 
@@ -34,6 +37,7 @@ public class UserController : ManagerController
     private readonly IDb _db;
     private readonly UserManager<User> _userManager;
     private readonly ManagerLocalizer _localizer;
+    private readonly ILogger _logger;
 
     /// <summary>
     /// Default constructor.
@@ -41,11 +45,13 @@ public class UserController : ManagerController
     /// <param name="db">The current db context</param>
     /// <param name="userManager">The current user manager</param>
     /// <param name="localizer">The manager localizer</param>
-    public UserController(IDb db, UserManager<User> userManager, ManagerLocalizer localizer)
+    /// <param name="factory">The optional log factory</param>
+    public UserController(IDb db, UserManager<User> userManager, ManagerLocalizer localizer, ILoggerFactory factory = null)
     {
         _db = db;
         _userManager = userManager;
         _localizer = localizer;
+        _logger = factory?.CreateLogger<UserController>();
     }
 
     /// <summary>
@@ -112,12 +118,9 @@ public class UserController : ManagerController
     [HttpPost]
     [Route("/manager/user/save")]
     [Authorize(Policy = Permissions.UsersSave)]
+    [SuppressMessage("Microsoft.Design", "CA1031", Justification = "Logging should catch all exceptions")]
     public async Task<IActionResult> Save([FromBody] UserEditModel model)
     {
-        // Refresh roles in the model if validation fails
-        //var temp = UserEditModel.Create(_db);
-        //model.Roles = temp.Roles;
-
         if (model.User == null)
         {
             return BadRequest(GetErrorMessage(_localizer.Security["The user could not be found."]));
@@ -187,6 +190,8 @@ public class UserController : ManagerController
         }
         catch (Exception ex)
         {
+            _logger?.LogError("Save() {Message}", ex.Message);
+
             return BadRequest(GetErrorMessage(ex.Message));
         }
     }

@@ -8,7 +8,7 @@
  *
  */
 
-using Piranha.Manager.Models;
+using Piranha.Manager.Models.ConfigModels;
 
 namespace Piranha.Manager.Services;
 
@@ -29,11 +29,11 @@ public class ConfigService
     /// Gets the config model.
     /// </summary>
     /// <returns>The model</returns>
-    public ConfigModel Get()
+    public ConfigEditModel Get()
     {
         using (var config = new Config(_api))
         {
-            return new ConfigModel
+            return new ConfigEditModel
             {
                 HierarchicalPageSlugs = config.HierarchicalPageSlugs,
                 ExpandedSitemapLevels = config.ManagerExpandedSitemapLevels,
@@ -59,7 +59,7 @@ public class ConfigService
     /// Saves the given config model to the database.
     /// </summary>
     /// <param name="model">The model</param>
-    public void Save(ConfigModel model)
+    public void Save(ConfigEditModel model)
     {
         using (var config = new Config(_api))
         {

@@ -10,8 +10,15 @@
 
 namespace Piranha.Manager.Models;
 
-public class RouteModel
+public sealed class RouteModel
 {
+    /// <summary>
+    /// Gets/sets the route title.
+    /// </summary>
     public string Title { get; set; }
+
+    /// <summary>
+    /// Gets/sets the route.
+    /// </summary>
     public string Route { get; set; }
 }

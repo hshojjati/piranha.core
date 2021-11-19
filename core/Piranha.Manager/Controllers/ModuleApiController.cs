@@ -11,7 +11,7 @@
 using System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Piranha.Manager.Models;
+using Piranha.Manager.Models.ModuleModels;
 using Piranha.Manager.Services;
 
 namespace Piranha.Manager.Controllers;

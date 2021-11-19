@@ -16,7 +16,7 @@ namespace Piranha.AspNetCore.Identity.Models;
 
 public class UserListModel
 {
-    public IList<ListItem> Users { get; set; } = new List<ListItem>();
+    public IList<UserListItem> Users { get; set; } = new List<UserListItem>();
 
     public static UserListModel Get(IDb db)
     {
@@ -24,7 +24,7 @@ public class UserListModel
         {
             Users = db.Users
                 .OrderBy(u => u.UserName)
-                .Select(u => new ListItem
+                .Select(u => new UserListItem
                 {
                     Id = u.Id,
                     UserName = u.UserName,
@@ -53,15 +53,5 @@ public class UserListModel
         }
 
         return model;
-    }
-
-    public class ListItem
-    {
-        public Guid Id { get; set; }
-        public string UserName { get; set; }
-        public string Email { get; set; }
-        public IList<string> Roles { get; set; } = new List<string>();
-
-        public string GravatarUrl { get; set; }
     }
 }

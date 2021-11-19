@@ -48,7 +48,7 @@ public class DateFieldSerializer : ISerializer
             {
                 field.Value = DateTime.Parse(str);
             }
-            catch
+            catch (FormatException)
             {
                 // Let's not throw an exception, let's just
                 // return a new empty field.

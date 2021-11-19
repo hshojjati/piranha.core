@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Piranha.Manager.Models;
+using Piranha.Manager.Models.AliasModels;
 using Piranha.Manager.Services;
 
 namespace Piranha.Manager.Controllers;
@@ -62,7 +63,7 @@ public class AliasApiController : Controller
     [Route("save")]
     [HttpPost]
     [Authorize(Policy = Permission.AliasesEdit)]
-    public async Task<IActionResult> Save(AliasListModel.AliasItem model)
+    public async Task<IActionResult> Save(AliasListItem model)
     {
         try
         {

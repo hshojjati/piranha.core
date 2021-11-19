@@ -18,8 +18,8 @@ using System.Threading.Tasks;
 using Piranha.Extend;
 using Piranha.Extend.Fields;
 using Piranha.Models;
-using Piranha.Manager.Models;
 using Piranha.Manager.Models.Content;
+using Piranha.Manager.Models.SiteModels;
 using Piranha.Services;
 
 namespace Piranha.Manager.Services;

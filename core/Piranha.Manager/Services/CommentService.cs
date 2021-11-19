@@ -11,7 +11,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Piranha.Manager.Models;
+using Piranha.Manager.Models.CommentModels;
 using Piranha.Models;
 
 namespace Piranha.Manager.Services;
@@ -48,7 +48,7 @@ public class CommentService
         {
             var post = await _api.Posts.GetByIdAsync<PostInfo>(postComment.ContentId);
 
-            model.Comments.Add(new CommentListModel.CommentItem
+            model.Comments.Add(new CommentListItem
             {
                 Id = postComment.Id,
                 ArticleTitle = post?.Title,
@@ -67,7 +67,7 @@ public class CommentService
         {
             var page = await _api.Pages.GetByIdAsync<PageInfo>(pageComment.ContentId);
 
-            model.Comments.Add(new CommentListModel.CommentItem
+            model.Comments.Add(new CommentListItem
             {
                 Id = pageComment.Id,
                 ArticleTitle = page?.Title,

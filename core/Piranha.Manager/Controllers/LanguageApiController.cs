@@ -9,10 +9,13 @@
  */
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Piranha.Manager.Models;
+using Piranha.Manager.Models.LanguageModels;
 using Piranha.Manager.Services;
 
 namespace Piranha.Manager.Controllers;
@@ -29,14 +32,16 @@ public class LanguageApiController : Controller
 {
     private readonly LanguageService _service;
     private readonly ManagerLocalizer _localizer;
+    private readonly ILogger _logger;
 
     /// <summary>
     /// Default constructor.
     /// </summary>
-    public LanguageApiController(LanguageService service, ManagerLocalizer localizer)
+    public LanguageApiController(LanguageService service, ManagerLocalizer localizer, ILoggerFactory factory = null)
     {
         _service = service;
         _localizer = localizer;
+        _logger = factory?.CreateLogger<LanguageApiController>();
     }
 
     /// <summary>
@@ -56,6 +61,7 @@ public class LanguageApiController : Controller
     /// <param name="model">The model</param>
     [Route("")]
     [HttpPost]
+    [SuppressMessage("Microsoft.Design", "CA1031", Justification = "Logging should catch all exceptions")]
     public async Task<IActionResult> Save(LanguageEditModel model)
     {
         try
@@ -72,6 +78,8 @@ public class LanguageApiController : Controller
         }
         catch (Exception e)
         {
+            _logger?.LogError("Save() {Message}", e.Message);
+
             var result = new LanguageEditModel();
             result.Status = new StatusMessage
             {
@@ -88,6 +96,7 @@ public class LanguageApiController : Controller
     /// <param name="id">The unique id</param>
     [Route("{id}")]
     [HttpDelete]
+    [SuppressMessage("Microsoft.Design", "CA1031", Justification = "Logging should catch all exceptions")]
     public async Task<IActionResult> Delete(Guid id)
     {
         try
@@ -104,6 +113,8 @@ public class LanguageApiController : Controller
         }
         catch (Exception e)
         {
+            _logger?.LogError("Delete() {Message}", e.Message);
+
             var result = new LanguageEditModel();
             result.Status = new StatusMessage
             {

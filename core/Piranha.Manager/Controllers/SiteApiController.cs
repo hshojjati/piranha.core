@@ -10,10 +10,13 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Piranha.Manager.Models;
+using Piranha.Manager.Models.SiteModels;
 using Piranha.Manager.Services;
 
 namespace Piranha.Manager.Controllers;
@@ -30,14 +33,16 @@ public class SiteApiController : Controller
 {
     private readonly SiteService _service;
     private readonly ManagerLocalizer _localizer;
+    private readonly ILogger _logger;
 
     /// <summary>
     /// Default constructor.
     /// </summary>
-    public SiteApiController(SiteService service, ManagerLocalizer localizer)
+    public SiteApiController(SiteService service, ManagerLocalizer localizer, ILoggerFactory factory = null)
     {
         _service = service;
         _localizer = localizer;
+        _logger = factory?.CreateLogger<SiteApiController>();
     }
 
     /// <summary>
@@ -92,6 +97,7 @@ public class SiteApiController : Controller
     [Route("save")]
     [HttpPost]
     [Authorize(Policy = Permission.SitesEdit)]
+    [SuppressMessage("Microsoft.Design", "CA1031", Justification = "Logging should catch all exceptions")]
     public async Task<StatusMessage> Save(SiteEditModel model)
     {
         try
@@ -107,8 +113,10 @@ public class SiteApiController : Controller
                 Body = e.Message
             };
         }
-        catch
+        catch (Exception e)
         {
+            _logger?.LogError("Save() {Message}", e.Message);
+
             return new StatusMessage
             {
                 Type = StatusMessage.Error,
@@ -131,6 +139,7 @@ public class SiteApiController : Controller
     [Route("savecontent")]
     [HttpPost]
     [Authorize(Policy = Permission.SitesEdit)]
+    [SuppressMessage("Microsoft.Design", "CA1031", Justification = "Logging should catch all exceptions")]
     public async Task<StatusMessage> SaveContent(SiteContentEditModel model)
     {
         try
@@ -146,8 +155,10 @@ public class SiteApiController : Controller
                 Body = e.Message
             };
         }
-        catch
+        catch (Exception e)
         {
+            _logger?.LogError("Save() {Message}", e.Message);
+
             return new StatusMessage
             {
                 Type = StatusMessage.Error,
@@ -170,6 +181,7 @@ public class SiteApiController : Controller
     [Route("delete")]
     [HttpDelete]
     [Authorize(Policy = Permission.SitesDelete)]
+    [SuppressMessage("Microsoft.Design", "CA1031", Justification = "Logging should catch all exceptions")]
     public async Task<StatusMessage> Delete([FromBody] Guid id)
     {
         try
@@ -185,8 +197,10 @@ public class SiteApiController : Controller
                 Body = e.Message
             };
         }
-        catch
+        catch (Exception e)
         {
+            _logger?.LogError("Save() {Message}", e.Message);
+
             return new StatusMessage
             {
                 Type = StatusMessage.Error,

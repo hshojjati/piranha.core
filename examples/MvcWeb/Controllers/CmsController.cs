@@ -89,7 +89,7 @@ public class CmsController : Controller
             }
             return View(model);
         }
-        catch
+        catch (UnauthorizedAccessException)
         {
             return Unauthorized();
         }

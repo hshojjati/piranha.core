@@ -10,10 +10,14 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Piranha.Manager.Models;
+using Piranha.Manager.Models.BlockModels;
+using Piranha.Manager.Models.ContentModels;
 using Piranha.Manager.Services;
 
 namespace Piranha.Manager.Controllers;
@@ -31,15 +35,17 @@ public class ContentApiController : Controller
     private readonly IApi _api;
     private readonly ContentService _content;
     private readonly ContentTypeService _contentType;
+    private readonly ILogger _logger;
 
     /// <summary>
     /// Default constructor.
     /// </summary>
-    public ContentApiController(ContentService content, ContentTypeService contentType, IApi api)
+    public ContentApiController(ContentService content, ContentTypeService contentType, IApi api, ILoggerFactory factory = null)
     {
         _api = api;
         _content = content;
         _contentType = contentType;
+        _logger = factory?.CreateLogger<ContentApiController>();
     }
 
     /// <summary>
@@ -197,6 +203,7 @@ public class ContentApiController : Controller
     [Route("save")]
     [HttpPost]
     [Authorize(Policy = Permission.ContentSave)]
+    [SuppressMessage("Microsoft.Design", "CA1031", Justification = "Logging should catch all exceptions")]
     public async Task<ContentEditModel> Save(ContentEditModel model)
     {
         try
@@ -212,6 +219,16 @@ public class ContentApiController : Controller
             };
 
             return model;
+        }
+        catch (Exception e)
+        {
+            _logger?.LogError("Save() {Message}", e.Message);
+
+            model.Status = new StatusMessage
+            {
+                Type = StatusMessage.Error,
+                Body = "An error occured while saving the content"
+            };
         }
 
         var ret = await _content.GetByIdAsync(model.Id, model.LanguageId);
@@ -232,6 +249,7 @@ public class ContentApiController : Controller
     [Route("delete")]
     [HttpDelete]
     [Authorize(Policy = Permission.ContentDelete)]
+    [SuppressMessage("Microsoft.Design", "CA1031", Justification = "Logging should catch all exceptions")]
     public async Task<StatusMessage> Delete([FromBody] Guid id)
     {
         try
@@ -247,8 +265,10 @@ public class ContentApiController : Controller
                 Body = e.Message
             };
         }
-        catch
+        catch (Exception e)
         {
+            _logger?.LogError("Delete() {Message}", e.Message);
+
             return new StatusMessage
             {
                 Type = StatusMessage.Error,
