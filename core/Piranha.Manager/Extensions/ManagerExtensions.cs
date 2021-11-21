@@ -9,6 +9,7 @@
  */
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +21,7 @@ using Piranha.Manager;
 using Piranha.Manager.Hubs;
 using Piranha.Manager.Services;
 
+[SuppressMessage("Microsoft.Design", "CA1050", Justification = "Public API")]
 public static class ManagerModuleExtensions
 {
     /// <summary>

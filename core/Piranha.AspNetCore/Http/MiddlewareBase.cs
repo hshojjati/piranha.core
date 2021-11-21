@@ -23,12 +23,12 @@ public abstract class MiddlewareBase
     /// <summary>
     /// The next middleware in the pipeline.
     /// </summary>
-    protected readonly RequestDelegate _next;
+    protected RequestDelegate Next { get; }
 
     /// <summary>
     /// The optional logger.
     /// </summary>
-    protected ILogger _logger;
+    protected ILogger Logger { get; }
 
     /// <summary>
     /// Creates a new middleware instance.
@@ -36,7 +36,7 @@ public abstract class MiddlewareBase
     /// <param name="next">The next middleware in the pipeline</param>
     protected MiddlewareBase(RequestDelegate next)
     {
-        _next = next;
+        Next = next;
     }
 
     /// <summary>
@@ -48,7 +48,7 @@ public abstract class MiddlewareBase
     {
         if (factory != null)
         {
-            _logger = factory.CreateLogger(this.GetType().FullName);
+            Logger = factory.CreateLogger(this.GetType().FullName);
         }
     }
 

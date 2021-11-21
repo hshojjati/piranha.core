@@ -10,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Piranha.Extend;
 
 namespace Piranha.Runtime;
@@ -24,6 +25,7 @@ public sealed class SerializerManager
     /// <summary>
     /// Gets the serializer for the specified type.
     /// </summary>
+    [SuppressMessage("Microsoft.Design", "CA1043", Justification = "Public API")]
     public ISerializer this[Type type]
     {
         get

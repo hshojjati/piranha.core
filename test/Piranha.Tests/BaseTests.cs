@@ -9,6 +9,7 @@
  */
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Piranha.Data.EF.SQLite;
@@ -18,6 +19,7 @@ namespace Piranha.Tests
     /// <summary>
     /// Base class for using the api.
     /// </summary>
+    [SuppressMessage("Microsoft.Design", "CA1051", Justification = "Test code. Not important for the packages.")]
     public abstract class BaseTests : IDisposable
     {
         protected IStorage storage = new Local.FileStorage("uploads/", "~/uploads/");

@@ -8,12 +8,14 @@
  *
  */
 
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Piranha;
 using Piranha.Manager.Editor;
 
+[SuppressMessage("Microsoft.Design", "CA1050", Justification = "Public API")]
 public static class SummernoteExtensions
 {
     /// <summary>

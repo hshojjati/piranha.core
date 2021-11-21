@@ -23,7 +23,7 @@ public sealed class AppFieldList : AppDataList<IField, AppField>
     /// <returns>The item, null if not found</returns>
     public AppField GetByShorthand(string shorthand)
     {
-        return _items.FirstOrDefault(i => i.Shorthand == shorthand);
+        return Items.FirstOrDefault(i => i.Shorthand == shorthand);
     }
 
     /// <summary>

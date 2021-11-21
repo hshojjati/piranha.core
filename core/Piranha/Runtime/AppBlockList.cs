@@ -24,7 +24,7 @@ public sealed class AppBlockList : AppDataList<Block, AppBlock>
     /// <returns>The category types</returns>
     public IEnumerable<string> GetCategories()
     {
-        return _items
+        return Items
             .Select(i => i.Category)
             .Distinct().OrderBy(c => c)
             .ToArray();
@@ -38,7 +38,7 @@ public sealed class AppBlockList : AppDataList<Block, AppBlock>
     /// <returns>The block types</returns>
     public IEnumerable<AppBlock> GetByCategory(string category, bool includeGroups = true)
     {
-        var query = _items
+        var query = Items
             .Where(i => i.Category == category);
 
         if (!includeGroups)

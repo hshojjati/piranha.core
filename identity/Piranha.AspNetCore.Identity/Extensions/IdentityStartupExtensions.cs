@@ -9,13 +9,15 @@
  */
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Piranha;
-using Piranha.AspNetCore.Identity;
 using Piranha.AspNetCore;
+using Piranha.AspNetCore.Identity;
 
+[SuppressMessage("Microsoft.Design", "CA1050", Justification = "Public API")]
 public static class IdentityStartupExtensions
 {
     /// <summary>

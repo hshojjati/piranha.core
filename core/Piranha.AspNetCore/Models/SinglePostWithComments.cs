@@ -75,7 +75,7 @@ public class SinglePostWithComments<T> : SinglePost<T> where T : PostBase
 
         if (Data != null)
         {
-            Comments = await _api.Posts.GetAllCommentsAsync(Data.Id);
+            Comments = await Api.Posts.GetAllCommentsAsync(Data.Id);
         }
         return result;
     }
@@ -98,9 +98,9 @@ public class SinglePostWithComments<T> : SinglePost<T> where T : PostBase
             Body = CommentBody
         };
 
-        await _api.Posts.SaveCommentAndVerifyAsync(id, comment);
+        await Api.Posts.SaveCommentAndVerifyAsync(id, comment);
 
-        Data = await _loader.GetPostAsync<T>(id, HttpContext.User, draft);
+        Data = await Loader.GetPostAsync<T>(id, HttpContext.User, draft);
 
         return Redirect(Data.Permalink + "#comments");
     }

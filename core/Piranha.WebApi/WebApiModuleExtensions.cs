@@ -9,10 +9,12 @@
  */
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
 using Piranha;
 using Piranha.WebApi;
 
+[SuppressMessage("Microsoft.Design", "CA1050", Justification = "Public API")]
 public static class WebApiModuleExtensions
 {
     /// <summary>

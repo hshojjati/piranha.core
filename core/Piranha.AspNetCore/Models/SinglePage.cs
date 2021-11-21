@@ -25,12 +25,12 @@ public class SinglePage<T> : Microsoft.AspNetCore.Mvc.RazorPages.PageModel where
     /// <summary>
     /// The current api.
     /// </summary>
-    protected readonly IApi _api;
+    protected IApi Api { get; }
 
     /// <summary>
     /// The current model loader.
     /// </summary>
-    protected readonly IModelLoader _loader;
+    protected IModelLoader Loader { get; }
 
     /// <summary>
     /// Gets/sets the model data.
@@ -44,8 +44,8 @@ public class SinglePage<T> : Microsoft.AspNetCore.Mvc.RazorPages.PageModel where
     /// <param name="loader">The model loader</param>
     public SinglePage(IApi api, IModelLoader loader)
     {
-        _api = api;
-        _loader = loader;
+        Api = api;
+        Loader = loader;
     }
 
     /// <summary>
@@ -57,7 +57,7 @@ public class SinglePage<T> : Microsoft.AspNetCore.Mvc.RazorPages.PageModel where
     {
         try
         {
-            Data = await _loader.GetPageAsync<T>(id, HttpContext.User, draft);
+            Data = await Loader.GetPageAsync<T>(id, HttpContext.User, draft);
 
             if (Data == null)
             {

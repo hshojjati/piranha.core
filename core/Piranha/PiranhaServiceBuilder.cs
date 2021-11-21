@@ -20,7 +20,7 @@ public class PiranhaServiceBuilder
     /// <summary>
     /// The inner Service collection.
     /// </summary>
-    public readonly IServiceCollection Services;
+    public IServiceCollection Services { get; }
 
     /// <summary>
     /// Gets/sets if runtime compilation should be enabled.

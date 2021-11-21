@@ -9,6 +9,7 @@
  */
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +17,7 @@ using Piranha;
 using Piranha.AspNetCore;
 using Piranha.Manager;
 
+[SuppressMessage("Microsoft.Design", "CA1050", Justification = "Public API")]
 public static class ManagerStartupExtensions
 {
     /// <summary>

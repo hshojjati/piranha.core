@@ -8,10 +8,13 @@
  *
  */
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace Piranha.Models;
 
 /// <summary>
 /// Interface for a flat content object without
 /// regions or blocks.
 /// </summary>
+[SuppressMessage("Microsoft.Design", "CA1040", Justification = "Public API")]
 public interface IContentInfo { }

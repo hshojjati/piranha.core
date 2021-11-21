@@ -51,5 +51,5 @@ public sealed class ContentTypeField
     /// <summary>
     /// Gets/sets the available field settings.
     /// </summary>
-    public IDictionary<string, object> Settings = new Dictionary<string, object>();
+    public IDictionary<string, object> Settings { get; set; } = new Dictionary<string, object>();
 }

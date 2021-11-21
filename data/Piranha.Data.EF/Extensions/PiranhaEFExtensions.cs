@@ -8,13 +8,15 @@
  *
  */
 
+using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Piranha;
 using Piranha.Repositories;
 using Piranha.Services;
-using System;
 
+[SuppressMessage("Microsoft.Design", "CA1050", Justification = "Public API")]
 public static class PiranhaEFExtensions
 {
     /// <summary>

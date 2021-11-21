@@ -47,6 +47,7 @@ namespace Piranha.Tests.Services
 
     [Collection("Integration tests")]
     [SuppressMessage("Microsoft.Design", "CA1034", Justification = "Test code. Not important for the packages.")]
+    [SuppressMessage("Microsoft.Design", "CA1051", Justification = "Test code. Not important for the packages.")]
     public class PageTests : BaseTestsAsync
     {
         public readonly Guid SITE_ID = Guid.NewGuid();

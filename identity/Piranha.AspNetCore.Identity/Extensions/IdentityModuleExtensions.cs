@@ -9,6 +9,7 @@
  */
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -24,6 +25,7 @@ using Piranha.Manager.LocalAuth;
 using IDb = Piranha.AspNetCore.Identity.IDb;
 using Module = Piranha.AspNetCore.Identity.Module;
 
+[SuppressMessage("Microsoft.Design", "CA1050", Justification = "Public API")]
 public static class IdentityModuleExtensions
 {
     /// <summary>

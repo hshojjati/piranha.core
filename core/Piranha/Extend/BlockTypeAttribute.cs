@@ -18,7 +18,7 @@ public class BlockTypeAttribute : Attribute
 {
     private bool _isGenericManuallySet = false;
     private bool _isGeneric = true;
-    protected string _component = "generic-block";
+    protected string ComponentName { get; set; } = "generic-block";
 
     /// <summary>
     /// Gets/sets the display name.
@@ -74,10 +74,10 @@ public class BlockTypeAttribute : Attribute
     /// </summary>
     public string Component
     {
-        get => _component;
+        get => ComponentName;
         set
         {
-            _component = value;
+            ComponentName = value;
 
             if (!_isGenericManuallySet)
             {

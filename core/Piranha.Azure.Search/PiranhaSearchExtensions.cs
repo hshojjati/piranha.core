@@ -8,11 +8,13 @@
  *
  */
 
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
 using Piranha;
 using Piranha.Azure.Search;
 using Piranha.Azure.Search.Services;
 
+[SuppressMessage("Microsoft.Design", "CA1050", Justification = "Public API")]
 public static class PiranhaSearchExtensions
 {
     /// <summary>

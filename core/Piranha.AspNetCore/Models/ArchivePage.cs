@@ -43,12 +43,12 @@ public class ArchivePage<T, TPost> : Microsoft.AspNetCore.Mvc.RazorPages.PageMod
     /// <summary>
     /// The current api.
     /// </summary>
-    protected readonly IApi _api;
+    protected IApi Api { get; }
 
     /// <summary>
     /// The current model loader.
     /// </summary>
-    protected readonly IModelLoader _loader;
+    protected IModelLoader Loader { get; }
 
     /// <summary>
     /// Gets/sets the model data.
@@ -67,8 +67,8 @@ public class ArchivePage<T, TPost> : Microsoft.AspNetCore.Mvc.RazorPages.PageMod
     /// <param name="loader">The model loader</param>
     public ArchivePage(IApi api, IModelLoader loader)
     {
-        _api = api;
-        _loader = loader;
+        Api = api;
+        Loader = loader;
     }
 
     /// <summary>
@@ -86,14 +86,14 @@ public class ArchivePage<T, TPost> : Microsoft.AspNetCore.Mvc.RazorPages.PageMod
     {
         try
         {
-            Data = await _loader.GetPageAsync<T>(id, HttpContext.User, draft);
+            Data = await Loader.GetPageAsync<T>(id, HttpContext.User, draft);
 
             if (Data == null)
             {
                 return NotFound();
             }
 
-            Archive = await _api.Archives.GetByIdAsync<TPost>(id, pagenum, category, tag, year, month);
+            Archive = await Api.Archives.GetByIdAsync<TPost>(id, pagenum, category, tag, year, month);
 
             return Page();
         }

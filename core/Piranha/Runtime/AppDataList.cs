@@ -20,7 +20,7 @@ public abstract class AppDataList<T, TItem> : IEnumerable<TItem> where TItem : A
     /// <summary>
     /// The items collection.
     /// </summary>
-    protected readonly IList<TItem> _items = new List<TItem>();
+    protected IList<TItem> Items { get; } = new List<TItem>();
 
     /// <summary>
     /// Registers a new item.
@@ -33,14 +33,14 @@ public abstract class AppDataList<T, TItem> : IEnumerable<TItem> where TItem : A
         //
         // Make sure we don't register the same type multiple times.
         //
-        if (!_items.Where(i => i.Type == type).Any())
+        if (!Items.Where(i => i.Type == type).Any())
         {
             var item = Activator.CreateInstance<TItem>();
 
             item.Type = type;
             item.TypeName = type.ToString();
 
-            _items.Add(OnRegister<TValue>(item));
+            Items.Add(OnRegister<TValue>(item));
         }
     }
 
@@ -50,10 +50,10 @@ public abstract class AppDataList<T, TItem> : IEnumerable<TItem> where TItem : A
     /// <typeparam name="TValue">The value type</typeparam>
     public virtual void UnRegister<TValue>() where TValue : T
     {
-        var item = _items.SingleOrDefault(i => i.Type == typeof(TValue));
+        var item = Items.SingleOrDefault(i => i.Type == typeof(TValue));
         if (item != null)
         {
-            _items.Remove(item);
+            Items.Remove(item);
         }
     }
 
@@ -64,7 +64,7 @@ public abstract class AppDataList<T, TItem> : IEnumerable<TItem> where TItem : A
     /// <returns>The item, null if not found</returns>
     public virtual TItem GetByType(Type type)
     {
-        return _items.SingleOrDefault(i => i.Type == type);
+        return Items.SingleOrDefault(i => i.Type == type);
     }
 
     /// <summary>
@@ -83,10 +83,10 @@ public abstract class AppDataList<T, TItem> : IEnumerable<TItem> where TItem : A
             {
                 var fixedName = typeName[..versionIndex].Replace("[[", "[");
 
-                return _items.SingleOrDefault(i => i.TypeName.StartsWith(fixedName));
+                return Items.SingleOrDefault(i => i.TypeName.StartsWith(fixedName));
             }
         }
-        return _items.SingleOrDefault(i => i.TypeName == typeName);
+        return Items.SingleOrDefault(i => i.TypeName == typeName);
     }
 
     /// <summary>
@@ -95,7 +95,7 @@ public abstract class AppDataList<T, TItem> : IEnumerable<TItem> where TItem : A
     /// <returns>The enumerator</returns>
     public IEnumerator<TItem> GetEnumerator()
     {
-        return _items.GetEnumerator();
+        return Items.GetEnumerator();
     }
 
     /// <summary>
@@ -104,7 +104,7 @@ public abstract class AppDataList<T, TItem> : IEnumerable<TItem> where TItem : A
     /// <returns>The enumerator</returns>
     IEnumerator IEnumerable.GetEnumerator()
     {
-        return _items.GetEnumerator();
+        return Items.GetEnumerator();
     }
 
     /// <summary>

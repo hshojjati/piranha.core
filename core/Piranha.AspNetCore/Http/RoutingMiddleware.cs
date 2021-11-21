@@ -57,7 +57,7 @@ public class RoutingMiddleware : MiddlewareBase
             var segments = !string.IsNullOrEmpty(url) ? url[1..].Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries) : Array.Empty<string>();
             int pos = 0;
 
-            _logger?.LogDebug("Url: [{url}]", url);
+            Logger?.LogDebug("Url: [{url}]", url);
 
             //
             // 1: Store raw url & request information
@@ -139,7 +139,7 @@ public class RoutingMiddleware : MiddlewareBase
             else
             {
                 // There's no sites available, let the application finish
-                await _next.Invoke(context);
+                await Next.Invoke(context);
                 return;
             }
 
@@ -148,7 +148,7 @@ public class RoutingMiddleware : MiddlewareBase
             //
             if (segments.Length <= pos && !_options.UseStartpageRouting)
             {
-                await _next.Invoke(context);
+                await Next.Invoke(context);
                 return;
             }
 
@@ -236,15 +236,15 @@ public class RoutingMiddleware : MiddlewareBase
                 }
             }
 
-            _logger?.LogDebug("Found Site: [{Id}]", site.Id);
+            Logger?.LogDebug("Found Site: [{Id}]", site.Id);
             if (page != null)
             {
-                _logger?.LogDebug("Found Page: [{Id}]", page.Id);
+                Logger?.LogDebug("Found Page: [{Id}]", page.Id);
             }
 
             if (post != null)
             {
-                _logger?.LogDebug("Found Post: [{Id}]", post.Id);
+                Logger?.LogDebug("Found Post: [{Id}]", post.Id);
             }
 
             //
@@ -276,7 +276,7 @@ public class RoutingMiddleware : MiddlewareBase
                 }
                 else
                 {
-                    _logger?.LogDebug("Setting redirect: [{RedirectUrl}]", post.RedirectUrl);
+                    Logger?.LogDebug("Setting redirect: [{RedirectUrl}]", post.RedirectUrl);
 
                     context.Response.Redirect(post.RedirectUrl, post.RedirectType == RedirectType.Permanent);
                     return;
@@ -433,7 +433,7 @@ public class RoutingMiddleware : MiddlewareBase
                 }
                 else
                 {
-                    _logger?.LogDebug("Setting redirect: [{RedirectUrl}]", page.RedirectUrl);
+                    Logger?.LogDebug("Setting redirect: [{RedirectUrl}]", page.RedirectUrl);
 
                     context.Response.Redirect(page.RedirectUrl, page.RedirectType == RedirectType.Permanent);
                     return;
@@ -445,7 +445,7 @@ public class RoutingMiddleware : MiddlewareBase
                 var strRoute = route.ToString();
                 var strQuery = query.ToString();
 
-                _logger?.LogDebug("Setting Route: [{strRoute}?{strQuery}]", strRoute, strQuery);
+                Logger?.LogDebug("Setting Route: [{strRoute}?{strQuery}]", strRoute, strQuery);
 
                 context.Request.Path = new PathString(strRoute);
                 if (context.Request.QueryString.HasValue)
@@ -460,7 +460,7 @@ public class RoutingMiddleware : MiddlewareBase
                 }
             }
         }
-        await _next.Invoke(context);
+        await Next.Invoke(context);
     }
 
     /// <summary>
@@ -478,7 +478,7 @@ public class RoutingMiddleware : MiddlewareBase
 
         if (expires > 0 && content.Published.HasValue)
         {
-            _logger?.LogDebug("Setting HTTP Cache for [{Slug}]", content.Slug);
+            Logger?.LogDebug("Setting HTTP Cache for [{Slug}]", content.Slug);
 
             var lastModified = !site.ContentLastModified.HasValue || content.LastModified > site.ContentLastModified
                 ? content.LastModified : site.ContentLastModified.Value;
@@ -494,7 +494,7 @@ public class RoutingMiddleware : MiddlewareBase
 
             if (HttpCaching.IsCached(context, etag, lastModified))
             {
-                _logger?.LogInformation("Client has current version. Setting NotModified");
+                Logger?.LogInformation("Client has current version. Setting NotModified");
                 context.Response.StatusCode = 304;
 
                 return true;
@@ -502,7 +502,7 @@ public class RoutingMiddleware : MiddlewareBase
         }
         else
         {
-            _logger?.LogDebug("Setting HTTP NoCache for [{Slug}]", content.Slug);
+            Logger?.LogDebug("Setting HTTP NoCache for [{Slug}]", content.Slug);
 
             headers.CacheControl = new CacheControlHeaderValue
             {

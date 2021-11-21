@@ -26,17 +26,17 @@ public class ModelLoader : IModelLoader
     /// <summary>
     /// The current api.
     /// </summary>
-    protected readonly IApi _api;
+    private readonly IApi _api;
 
     /// <summary>
     /// The current authorization service.
     /// </summary>
-    protected readonly IAuthorizationService _auth;
+    private readonly IAuthorizationService _auth;
 
     /// <summary>
     /// The current application service.
     /// </summary>
-    protected readonly IApplicationService _app;
+    private readonly IApplicationService _app;
 
     /// <summary>
     /// Default constructor.

@@ -8,12 +8,14 @@
  *
  */
 
+using System.Diagnostics.CodeAnalysis;
 using Piranha;
 using Piranha.AspNetCore;
 
 /// <summary>
 /// Extension class for adding TinyMCE to the web application.
 /// </summary>
+[SuppressMessage("Microsoft.Design", "CA1050", Justification = "Public API")]
 public static class TinyMCEStartupExtensions
 {
     /// <summary>

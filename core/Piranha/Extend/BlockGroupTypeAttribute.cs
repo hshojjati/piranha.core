@@ -21,7 +21,7 @@ public class BlockGroupTypeAttribute : BlockTypeAttribute
     /// </summary>
     public BlockGroupTypeAttribute()
     {
-        _component = null;
+        ComponentName = null;
     }
 
     /// <summary>

@@ -59,7 +59,7 @@ public class SitemapMiddleware : MiddlewareBase
 
             if (url.ToLower() == "/sitemap.xml")
             {
-                _logger?.LogInformation($"Sitemap.xml requested, generating");
+                Logger?.LogInformation($"Sitemap.xml requested, generating");
 
                 // Get the requested site by hostname
                 var siteId = service.Site.Id;
@@ -94,7 +94,7 @@ public class SitemapMiddleware : MiddlewareBase
                 return;
             }
         }
-        await _next.Invoke(context);
+        await Next.Invoke(context);
     }
 
     private async Task<List<Url>> GetPageUrlsAsync(IApi api, Piranha.Models.SitemapItem item, string baseUrl)

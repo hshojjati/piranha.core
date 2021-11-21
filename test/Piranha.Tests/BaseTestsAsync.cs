@@ -9,6 +9,7 @@
  */
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +24,7 @@ namespace Piranha.Tests
     /// <summary>
     /// Base class for using the api.
     /// </summary>
+    [SuppressMessage("Microsoft.Design", "CA1051", Justification = "Test code. Not important for the packages.")]
     public abstract class BaseTestsAsync : IAsyncLifetime
     {
         protected IStorage _storage = new Local.FileStorage("uploads/", "~/uploads/");

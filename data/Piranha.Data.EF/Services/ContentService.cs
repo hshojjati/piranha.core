@@ -27,8 +27,8 @@ public class ContentService<TContent, TField, TModelBase> : IContentService<TCon
 {
     //
     // Members
-    protected readonly IContentFactory _factory;
-    protected readonly IMapper _mapper;
+    protected IContentFactory Factory { get; }
+    protected IMapper Mapper { get; }
 
     /// <summary>
     /// Default constructor.
@@ -37,8 +37,8 @@ public class ContentService<TContent, TField, TModelBase> : IContentService<TCon
     /// <param name="mapper">The AutoMapper instance to use</param>
     public ContentService(IContentFactory factory, IMapper mapper)
     {
-        _factory = factory;
-        _mapper = mapper;
+        Factory = factory;
+        Mapper = mapper;
     }
 
     /// <summary>
@@ -78,12 +78,12 @@ public class ContentService<TContent, TField, TModelBase> : IContentService<TCon
             //
             // 2: Create an initialized model
             //
-            var model = await _factory.CreateAsync<T>(type);
+            var model = await Factory.CreateAsync<T>(type);
 
             //
             // 3: Map basic fields
             //
-            _mapper.Map<TContent, TModelBase>(content, model);
+            Mapper.Map<TContent, TModelBase>(content, model);
 
             //
             // 4: Map routes
@@ -104,7 +104,7 @@ public class ContentService<TContent, TField, TModelBase> : IContentService<TCon
 
                 if (translation != null)
                 {
-                    _mapper.Map(translation, model);
+                    Mapper.Map(translation, model);
                 }
             }
 
@@ -203,7 +203,7 @@ public class ContentService<TContent, TField, TModelBase> : IContentService<TCon
         //
         // 2: Map basic fields
         //
-        _mapper.Map<TModelBase, TContent>(model, content);
+        Mapper.Map<TModelBase, TContent>(model, content);
 
         //
         // 3: Map translation
@@ -793,7 +793,7 @@ public class ContentService<TContent, TField, TModelBase> : IContentService<TCon
             if (model is Models.IDynamicContent dynamicModel)
             {
                 var list = (IList)((IDictionary<string, object>)dynamicModel.Regions)[regionId];
-                var obj = await _factory.CreateDynamicRegionAsync(contentType, regionId);
+                var obj = await Factory.CreateDynamicRegionAsync(contentType, regionId);
 
                 foreach (var field in fields)
                 {

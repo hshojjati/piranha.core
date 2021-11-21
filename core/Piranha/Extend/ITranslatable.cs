@@ -8,9 +8,12 @@
  *
  */
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace Piranha.Extend;
 
 /// <summary>
 /// Interface for marking a block or field as translatable.
 /// </summary>
+[SuppressMessage("Microsoft.Design", "CA1040", Justification = "Public API")]
 public interface ITranslatable { }

@@ -8,10 +8,12 @@
  *
  */
 
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
 using Piranha;
 using Piranha.Local;
 
+[SuppressMessage("Microsoft.Design", "CA1050", Justification = "Public API")]
 public static class FileStorageExtensions
 {
     /// <summary>

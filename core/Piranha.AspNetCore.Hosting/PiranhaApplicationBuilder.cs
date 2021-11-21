@@ -20,7 +20,7 @@ public class PiranhaApplicationBuilder
     /// <summary>
     /// The inner Application Builder.
     /// </summary>
-    public readonly IApplicationBuilder Builder;
+    public IApplicationBuilder Builder { get; }
 
     /// <summary>
     /// Default constructor.
