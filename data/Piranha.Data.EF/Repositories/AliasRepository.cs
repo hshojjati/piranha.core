@@ -10,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -85,6 +86,7 @@ public class AliasRepository : IAliasRepository
     /// <param name="url">The unique url</param>
     /// <param name="siteId">The site id</param>
     /// <returns>The model</returns>
+    [SuppressMessage("Microsoft.Design", "CA1054", Justification = "Public API")]
     public Task<Alias> GetByAliasUrl(string url, Guid siteId)
     {
         return _db.Aliases
@@ -109,6 +111,7 @@ public class AliasRepository : IAliasRepository
     /// <param name="url">The unique url</param>
     /// <param name="siteId">The site id</param>
     /// <returns>The model</returns>
+    [SuppressMessage("Microsoft.Design", "CA1054", Justification = "Public API")]
     public async Task<IEnumerable<Alias>> GetByRedirectUrl(string url, Guid siteId)
     {
         return await _db.Aliases

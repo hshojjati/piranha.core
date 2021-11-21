@@ -8,6 +8,7 @@
  *
  */
 
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using Piranha.AspNetCore.Services;
 using Piranha.Extend.Blocks;
@@ -240,6 +241,7 @@ public static class PiranhaUrlExtensions
     /// <param name="app">The current application service</param>
     /// <param name="url">The content url</param>
     /// <returns>The url</returns>
+    [SuppressMessage("Microsoft.Design", "CA1054", Justification = "Public API")]
     public static string ContentUrl(this IApplicationService app, string url)
     {
         return GenerateUrl(app, url, false);
@@ -262,6 +264,7 @@ public static class PiranhaUrlExtensions
     /// <param name="app">The current application service</param>
     /// <param name="url">The content url</param>
     /// <returns>The url</returns>
+    [SuppressMessage("Microsoft.Design", "CA1054", Justification = "Public API")]
     public static string AbsoluteContentUrl(this IApplicationService app, string url)
     {
         var contentUrl = ContentUrl(app, url);

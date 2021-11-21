@@ -19,7 +19,7 @@ public class FileStorageSession : IStorageSession
 {
     private readonly FileStorage _storage;
     private readonly string _basePath;
-    private readonly string _baseUrl;
+    private readonly string _baseRoute;
     private readonly FileStorageNaming _naming;
 
     /// <summary>
@@ -27,13 +27,13 @@ public class FileStorageSession : IStorageSession
     /// </summary>
     /// <param name="storage">The main file storage</param>
     /// <param name="basePath">The base path</param>
-    /// <param name="baseUrl">The base url</param>
+    /// <param name="baseRoute">The base route</param>
     /// <param name="naming">How uploaded media files should be named</param>
-    public FileStorageSession(FileStorage storage, string basePath, string baseUrl, FileStorageNaming naming)
+    public FileStorageSession(FileStorage storage, string basePath, string baseRoute, FileStorageNaming naming)
     {
         _storage = storage;
         _basePath = basePath;
-        _baseUrl = baseUrl;
+        _baseRoute = baseRoute;
         _naming = naming;
     }
 
@@ -77,7 +77,7 @@ public class FileStorageSession : IStorageSession
         {
             await stream.CopyToAsync(file).ConfigureAwait(false);
         }
-        return _baseUrl + path;
+        return _baseRoute + path;
     }
 
     /// <summary>
@@ -98,7 +98,7 @@ public class FileStorageSession : IStorageSession
         {
             await file.WriteAsync(bytes, 0, bytes.Length).ConfigureAwait(false);
         }
-        return _baseUrl + path;
+        return _baseRoute + path;
     }
 
     /// <summary>

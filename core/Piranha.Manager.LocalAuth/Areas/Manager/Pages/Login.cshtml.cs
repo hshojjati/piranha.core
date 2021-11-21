@@ -8,6 +8,7 @@
  *
  */
 
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -58,6 +59,7 @@ namespace Piranha.Manager.LocalAuth.Areas.Manager.Pages
         /// Gets the login page.
         /// </summary>
         /// <param name="returnUrl">The optional return url</param>
+        [SuppressMessage("Microsoft.Design", "CA1054", Justification = "Public API")]
         public void OnGet(string returnUrl = null)
         {
             if (!string.IsNullOrEmpty(ErrorMessage))
@@ -72,6 +74,7 @@ namespace Piranha.Manager.LocalAuth.Areas.Manager.Pages
         /// Handles authorization after a post.
         /// </summary>
         /// <param name="returnUrl">The optional return url</param>
+        [SuppressMessage("Microsoft.Design", "CA1054", Justification = "Public API")]
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             await _service.SignOut(HttpContext);

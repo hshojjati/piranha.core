@@ -17,27 +17,27 @@ namespace Piranha.Local;
 public class FileStorage : IStorage
 {
     private readonly string _basePath = "wwwroot/uploads/";
-    private readonly string _baseUrl = "~/uploads/";
+    private readonly string _baseRoute = "~/uploads/";
     private readonly FileStorageNaming _naming;
 
     /// <summary>
     /// Default constructor.
     /// </summary>
     /// <param name="basePath">The optional base path</param>
-    /// <param name="baseUrl">The optional base url</param>
+    /// <param name="baseRoute">The optional base route</param>
     /// <param name="naming">How uploaded media files should be named</param>
     public FileStorage(
         string basePath = null,
-        string baseUrl = null,
+        string baseRoute = null,
         FileStorageNaming naming = FileStorageNaming.UniqueFileNames)
     {
         if (!string.IsNullOrEmpty(basePath))
         {
             _basePath = basePath;
         }
-        if (!string.IsNullOrEmpty(baseUrl))
+        if (!string.IsNullOrEmpty(baseRoute))
         {
-            _baseUrl = baseUrl;
+            _baseRoute = baseRoute;
         }
 
         if (!Directory.Exists(_basePath))
@@ -56,7 +56,7 @@ public class FileStorage : IStorage
     {
         return Task.Run(() =>
         {
-            return (IStorageSession)new FileStorageSession(this, _basePath, _baseUrl, _naming);
+            return (IStorageSession)new FileStorageSession(this, _basePath, _baseRoute, _naming);
         });
     }
 
@@ -70,7 +70,7 @@ public class FileStorage : IStorage
     {
         if (media != null && !string.IsNullOrWhiteSpace(filename))
         {
-            return _baseUrl + GetResourceName(media, filename, true);
+            return _baseRoute + GetResourceName(media, filename, true);
         }
         return null;
     }

@@ -8,6 +8,7 @@
  *
  */
 
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -38,6 +39,7 @@ public sealed class AuthController : Controller
 
     [Route("{returnUrl?}")]
     [HttpGet]
+    [SuppressMessage("Microsoft.Design", "CA1054", Justification = "Public API")]
     public IActionResult SetAuthCookie(string returnUrl = null)
     {
         var tokens = _antiForgery.GetAndStoreTokens(HttpContext);

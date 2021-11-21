@@ -10,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Piranha.Models;
 
@@ -37,6 +38,7 @@ public interface IAliasService
     /// <param name="url">The unique url</param>
     /// <param name="siteId">The optional site id</param>
     /// <returns>The model</returns>
+    [SuppressMessage("Microsoft.Design", "CA1054", Justification = "Public API")]
     Task<Alias> GetByAliasUrlAsync(string url, Guid? siteId = null);
 
     /// <summary>
@@ -45,6 +47,7 @@ public interface IAliasService
     /// <param name="url">The unique url</param>
     /// <param name="siteId">The optional site id</param>
     /// <returns>The model</returns>
+    [SuppressMessage("Microsoft.Design", "CA1054", Justification = "Public API")]
     Task<IEnumerable<Alias>> GetByRedirectUrlAsync(string url, Guid? siteId = null);
 
     /// <summary>

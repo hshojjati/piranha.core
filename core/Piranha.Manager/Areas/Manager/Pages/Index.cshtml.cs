@@ -8,6 +8,7 @@
  *
  */
 
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +25,8 @@ namespace Piranha.Manager.Models
         {
             _service = service;
         }
+
+        [SuppressMessage("Microsoft.Design", "CA1054", Justification = "Public API")]
         public async Task<IActionResult> OnGet(string returnUrl = null)
         {
             var items = await Menu.Items.GetForUser(HttpContext.User, _service);
