@@ -9,6 +9,7 @@
  */
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading.Tasks;
 using Azure.Core;
@@ -75,6 +76,7 @@ public class BlobStorage : IStorage, IStorageSession, IInitializable
     /// <param name="media">The media file</param>
     /// <param name="id">The resource id</param>
     /// <returns>The public url</returns>
+    [SuppressMessage("Microsoft.Design", "CA1055", Justification = "Public API")]
     public string GetPublicUrl(Media media, string id)
     {
         return media == null || string.IsNullOrWhiteSpace(id) ? null :

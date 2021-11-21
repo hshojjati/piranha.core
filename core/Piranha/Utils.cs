@@ -11,6 +11,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -148,6 +149,7 @@ public static class Utils
     /// <param name="email">The email address</param>
     /// <param name="size">The requested size</param>
     /// <returns>The gravatar URL</returns>
+    [SuppressMessage("Microsoft.Design", "CA1055", Justification = "Public API")]
     public static string GenerateGravatarUrl(string email, int size = 0)
     {
         using var md5 = MD5.Create();

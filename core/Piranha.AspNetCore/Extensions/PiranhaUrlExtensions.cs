@@ -27,6 +27,7 @@ public static class PiranhaUrlExtensions
     /// <param name="app">The application service</param>
     /// <param name="page">The page</param>
     /// <returns>The url</returns>
+    [SuppressMessage("Microsoft.Design", "CA1055", Justification = "Public API")]
     public static string AbsoluteUrl(this IApplicationService app, PageBase page)
     {
         return $"{ AbsoluteUrlStart(app) }{ Url(app, page) }";
@@ -38,6 +39,7 @@ public static class PiranhaUrlExtensions
     /// <param name="app">The application service</param>
     /// <param name="block">The block</param>
     /// <returns>The url</returns>
+    [SuppressMessage("Microsoft.Design", "CA1055", Justification = "Public API")]
     public static string AbsoluteUrl(this IApplicationService app, PageBlock block)
     {
         return $"{ AbsoluteUrlStart(app) }{ Url(app, block) }";
@@ -49,6 +51,7 @@ public static class PiranhaUrlExtensions
     /// <param name="app">The application service</param>
     /// <param name="field">The field</param>
     /// <returns>The url</returns>
+    [SuppressMessage("Microsoft.Design", "CA1055", Justification = "Public API")]
     public static string AbsoluteUrl(this IApplicationService app, PageField field)
     {
         return $"{ AbsoluteUrlStart(app) }{ Url(app, field) }";
@@ -60,6 +63,7 @@ public static class PiranhaUrlExtensions
     /// <param name="app">The application service</param>
     /// <param name="post">The post</param>
     /// <returns>The url</returns>
+    [SuppressMessage("Microsoft.Design", "CA1055", Justification = "Public API")]
     public static string AbsoluteUrl(this IApplicationService app, PostBase post)
     {
         return $"{ AbsoluteUrlStart(app) }{ Url(app, post) }";
@@ -71,6 +75,7 @@ public static class PiranhaUrlExtensions
     /// <param name="app">The application service</param>
     /// <param name="block">The block</param>
     /// <returns>The url</returns>
+    [SuppressMessage("Microsoft.Design", "CA1055", Justification = "Public API")]
     public static string AbsoluteUrl(this IApplicationService app, PostBlock block)
     {
         return $"{ AbsoluteUrlStart(app) }{ Url(app, block) }";
@@ -82,6 +87,7 @@ public static class PiranhaUrlExtensions
     /// <param name="app">The application service</param>
     /// <param name="field">The field</param>
     /// <returns>The url</returns>
+    [SuppressMessage("Microsoft.Design", "CA1055", Justification = "Public API")]
     public static string AbsoluteUrl(this IApplicationService app, PostField field)
     {
         return $"{ AbsoluteUrlStart(app) }{ Url(app, field) }";
@@ -94,6 +100,7 @@ public static class PiranhaUrlExtensions
     /// <param name="app">The application service</param>
     /// <param name="taxonomy">The taxonomy</param>
     /// <returns></returns>
+    [SuppressMessage("Microsoft.Design", "CA1055", Justification = "Public API")]
     public static string AbsoluteUrl(this IApplicationService app, Taxonomy taxonomy)
     {
         return $"{ AbsoluteUrlStart(app) }{ Url(app, taxonomy) }";
@@ -105,6 +112,7 @@ public static class PiranhaUrlExtensions
     /// <param name="app">The application service</param>
     /// <param name="page">The page</param>
     /// <returns>The url</returns>
+    [SuppressMessage("Microsoft.Design", "CA1055", Justification = "Public API")]
     public static string Url(this IApplicationService app, PageBase page)
     {
         if (page != null)
@@ -120,6 +128,7 @@ public static class PiranhaUrlExtensions
     /// <param name="app">The application service</param>
     /// <param name="block">The block</param>
     /// <returns>The url</returns>
+    [SuppressMessage("Microsoft.Design", "CA1055", Justification = "Public API")]
     public static string Url(this IApplicationService app, PageBlock block)
     {
         if (block != null)
@@ -135,6 +144,7 @@ public static class PiranhaUrlExtensions
     /// <param name="app">The application service</param>
     /// <param name="field">The field</param>
     /// <returns>The url</returns>
+    [SuppressMessage("Microsoft.Design", "CA1055", Justification = "Public API")]
     public static string Url(this IApplicationService app, PageField field)
     {
         if (field != null)
@@ -150,6 +160,7 @@ public static class PiranhaUrlExtensions
     /// <param name="app">The application service</param>
     /// <param name="post">The post</param>
     /// <returns>The url</returns>
+    [SuppressMessage("Microsoft.Design", "CA1055", Justification = "Public API")]
     public static string Url(this IApplicationService app, PostBase post)
     {
         if (post != null)
@@ -165,6 +176,7 @@ public static class PiranhaUrlExtensions
     /// <param name="app">The application service</param>
     /// <param name="block">The block</param>
     /// <returns>The url</returns>
+    [SuppressMessage("Microsoft.Design", "CA1055", Justification = "Public API")]
     public static string Url(this IApplicationService app, PostBlock block)
     {
         if (block != null)
@@ -180,6 +192,7 @@ public static class PiranhaUrlExtensions
     /// <param name="app">The application service</param>
     /// <param name="field">The field</param>
     /// <returns>The url</returns>
+    [SuppressMessage("Microsoft.Design", "CA1055", Justification = "Public API")]
     public static string Url(this IApplicationService app, PostField field)
     {
         if (field != null)
@@ -195,6 +208,7 @@ public static class PiranhaUrlExtensions
     /// <param name="app">The application service</param>
     /// <param name="item">The sitemap item</param>
     /// <returns>The url</returns>
+    [SuppressMessage("Microsoft.Design", "CA1055", Justification = "Public API")]
     public static string Url(this IApplicationService app, SitemapItem item)
     {
         if (item != null)
@@ -211,6 +225,7 @@ public static class PiranhaUrlExtensions
     /// <param name="app">The application service</param>
     /// <param name="taxonomy">The taxonomy</param>
     /// <returns></returns>
+    [SuppressMessage("Microsoft.Design", "CA1055", Justification = "Public API")]
     public static string Url(this IApplicationService app, Taxonomy taxonomy)
     {
         if (app.CurrentPage != null && taxonomy != null && taxonomy.Type != TaxonomyType.NotSet)
@@ -230,6 +245,7 @@ public static class PiranhaUrlExtensions
     /// <param name="app">The current application service</param>
     /// <param name="slug">The slug</param>
     /// <returns>The url</returns>
+    [SuppressMessage("Microsoft.Design", "CA1055", Justification = "Public API")]
     public static string Url(this IApplicationService app, string slug)
     {
         return GenerateUrl(app, slug, true);
@@ -242,6 +258,7 @@ public static class PiranhaUrlExtensions
     /// <param name="url">The content url</param>
     /// <returns>The url</returns>
     [SuppressMessage("Microsoft.Design", "CA1054", Justification = "Public API")]
+    [SuppressMessage("Microsoft.Design", "CA1055", Justification = "Public API")]
     public static string ContentUrl(this IApplicationService app, string url)
     {
         return GenerateUrl(app, url, false);
@@ -253,6 +270,7 @@ public static class PiranhaUrlExtensions
     /// <param name="app">The current application service</param>
     /// <param name="slug">The slug</param>
     /// <returns>The url</returns>
+    [SuppressMessage("Microsoft.Design", "CA1055", Justification = "Public API")]
     public static string AbsoluteUrl(this IApplicationService app, string slug)
     {
         return $"{ AbsoluteUrlStart(app) }{ Url(app, slug) }";
@@ -265,6 +283,7 @@ public static class PiranhaUrlExtensions
     /// <param name="url">The content url</param>
     /// <returns>The url</returns>
     [SuppressMessage("Microsoft.Design", "CA1054", Justification = "Public API")]
+    [SuppressMessage("Microsoft.Design", "CA1055", Justification = "Public API")]
     public static string AbsoluteContentUrl(this IApplicationService app, string url)
     {
         var contentUrl = ContentUrl(app, url);

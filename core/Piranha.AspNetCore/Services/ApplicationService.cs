@@ -9,6 +9,7 @@
  */
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -144,6 +145,7 @@ public class ApplicationService : IApplicationService
     /// <param name="email">The email address</param>
     /// <param name="size">The requested size</param>
     /// <returns>The gravatar URL</returns>
+    [SuppressMessage("Microsoft.Design", "CA1055", Justification = "Public API")]
     public string GetGravatarUrl(string email, int size = 0)
     {
         using var md5 = MD5.Create();

@@ -4,7 +4,9 @@
     <TargetFramework>net6.0</TargetFramework>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <NoWarn>$(NoWarn);1591</NoWarn>
-    <Description>Summernote WYSIWYG Editor for Piranha CMS</Description>
+    <Description>$(PiranhaDescription)
+
+Summernote WYSIWYG Editor for the manager interface.</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">

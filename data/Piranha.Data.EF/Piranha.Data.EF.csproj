@@ -3,7 +3,9 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <NoWarn>$(NoWarn);1591</NoWarn>
-    <Description>Data components for Entity Framework Core</Description>
+    <Description>$(PiranhaDescription)
+
+Basic abstractions for using Entity Framework Core with Piranha CMS.</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">

@@ -3,7 +3,9 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-    <Description>TinyMCE WYSIWYG Editor for Piranha CMS</Description>
+    <Description>$(PiranhaDescription)
+
+TinyMCE WYSIWYG Editor for the manager interface.</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">

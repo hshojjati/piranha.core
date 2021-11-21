@@ -2,7 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <Description>Library for defining content types with Attributes</Description>
+    <Description>$(PiranhaDescription)
+
+Tools for defining and importing content types using attributes.</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">

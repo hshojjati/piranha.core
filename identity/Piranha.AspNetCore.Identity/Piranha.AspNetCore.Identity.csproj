@@ -4,7 +4,9 @@
     <TargetFramework>net6.0</TargetFramework>
     <NoWarn>$(NoWarn);1591</NoWarn>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
-    <Description>Piranha CMS security provider for AspNetCore Identity</Description>
+    <Description>$(PiranhaDescription)
+
+Basic abstractions and manager interface for using ASP.NET Identity with Piranha CMS.</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">

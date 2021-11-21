@@ -3,7 +3,9 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <NoWarn>$(NoWarn);1591;CA1050</NoWarn>
-    <Description>Package for processing uploaded images using ImageSharp</Description>
+    <Description>$(PiranhaDescription)
+
+Image manipulation library based on ImageSharp.</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">

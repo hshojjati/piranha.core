@@ -3,7 +3,9 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <NoWarn>$(NoWarn);1591</NoWarn>
-    <Description>Localization for the Piranha CMS manager panel</Description>
+    <Description>$(PiranhaDescription)
+
+Localization for the Piranha CMS manager interface.</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">

@@ -5,7 +5,9 @@
 	<NoWarn>$(NoWarn);CA1050</NoWarn>
     <RootNamespace>Piranha.AspNetCore</RootNamespace>
     <NoWarn>$(NoWarn);1591</NoWarn>
-    <Description>Piranha CMS simple security provider for AspNetCore</Description>
+    <Description>$(PiranhaDescription)
+
+Simple in-memory security module that can be used for testing.</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">

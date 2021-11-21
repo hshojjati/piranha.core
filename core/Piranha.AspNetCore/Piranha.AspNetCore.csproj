@@ -3,7 +3,9 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
 	<NoWarn>$(NoWarn);CA1050</NoWarn>
-	<Description>Piranha CMS middleware components for AspNetCore</Description>
+	<Description>$(PiranhaDescription)
+
+Tools for building an integrated web application with ASP.NET.</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">

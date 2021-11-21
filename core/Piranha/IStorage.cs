@@ -8,6 +8,7 @@
  *
  */
 
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Piranha.Models;
 
@@ -30,6 +31,7 @@ public interface IStorage
     /// <param name="media">The media file</param>
     /// <param name="filename">The file name</param>
     /// <returns>The public url</returns>
+    [SuppressMessage("Microsoft.Design", "CA1055", Justification = "Public API")]
     string GetPublicUrl(Media media, string filename);
 
     /// <summary>

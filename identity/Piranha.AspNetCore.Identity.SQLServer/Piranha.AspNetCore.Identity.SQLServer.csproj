@@ -3,7 +3,9 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <NoWarn>$(NoWarn);1591</NoWarn>
-    <Description>Piranha CMS AspNetCore Identity provider for SQLServer</Description>
+    <Description>$(PiranhaDescription)
+
+Package for using SqlServer and ASP.NET Identity with Piranha CMS.</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">

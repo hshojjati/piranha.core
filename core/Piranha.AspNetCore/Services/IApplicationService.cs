@@ -9,6 +9,7 @@
  */
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Piranha.AspNetCore.Helpers;
@@ -69,5 +70,6 @@ public interface IApplicationService
     /// <param name="email">The email address</param>
     /// <param name="size">The requested size</param>
     /// <returns>The gravatar URL</returns>
+    [SuppressMessage("Microsoft.Design", "CA1055", Justification = "Public API")]
     string GetGravatarUrl(string email, int size = 0);
 }

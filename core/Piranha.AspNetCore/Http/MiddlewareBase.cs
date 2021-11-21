@@ -95,16 +95,16 @@ public abstract class MiddlewareBase
     /// <summary>
     /// Checks if this is a manager request.
     /// </summary>
-    /// <param name="url">The url</param>
-    /// <returns>If the given url is for the manager application</returns>
-    protected static bool IsManagerRequest(string url)
+    /// <param name="route">The url</param>
+    /// <returns>If the given route is for the manager application</returns>
+    protected static bool IsManagerRequest(string route)
     {
-        if (string.IsNullOrEmpty(url))
+        if (string.IsNullOrEmpty(route))
         {
             return false;
         }
 
-        if (url.StartsWith("/manager/") || url == "/manager")
+        if (route.StartsWith("/manager/") || route == "/manager")
         {
             return true;
         }

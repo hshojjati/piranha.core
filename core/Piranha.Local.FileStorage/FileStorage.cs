@@ -8,6 +8,7 @@
  *
  */
 
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading.Tasks;
 using Piranha.Models;
@@ -66,6 +67,7 @@ public class FileStorage : IStorage
     /// <param name="media">The media file</param>
     /// <param name="filename">The file name</param>
     /// <returns>The public url</returns>
+    [SuppressMessage("Microsoft.Design", "CA1055", Justification = "Public API")]
     public string GetPublicUrl(Media media, string filename)
     {
         if (media != null && !string.IsNullOrWhiteSpace(filename))

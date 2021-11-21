@@ -3,7 +3,9 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <NoWarn>$(NoWarn);1591</NoWarn>
-    <Description>Entity Framework Core migration package for SQLite</Description>
+    <Description>$(PiranhaDescription)
+
+Package for using SqLite with Piranha CMS.</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">

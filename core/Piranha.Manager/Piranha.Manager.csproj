@@ -4,7 +4,9 @@
     <TargetFramework>net6.0</TargetFramework>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <NoWarn>$(NoWarn);1591</NoWarn>
-    <Description>Manager panel for Piranha CMS for AspNetCore</Description>
+    <Description>$(PiranhaDescription)
+
+Editorial manager interface for Piranha CMS for ASP.NET.</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">

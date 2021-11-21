@@ -3,7 +3,9 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <NoWarn>$(NoWarn);1591</NoWarn>
-    <Description>Package for storing uploaded media assets on disc</Description>
+    <Description>$(PiranhaDescription)
+
+Storage implementation for storing uploaded media assets as files on the web server.</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">

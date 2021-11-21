@@ -3,7 +3,9 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <NoWarn>$(NoWarn);1591</NoWarn>
-    <Description>Web Api module for Piranha CMS</Description>
+    <Description>$(PiranhaDescription)
+
+Web Api module for getting Piranha CMS content models as JSON using a REST Api.</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
