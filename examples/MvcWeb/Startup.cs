@@ -6,9 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Piranha;
 using Piranha.AttributeBuilder;
-using Piranha.AspNetCore.Identity.SQLite;
-using Piranha.Data.EF.SQLite;
 using Piranha.Manager.Editor;
+using Piranha.Data.EF.SQLServer;
+using Piranha.AspNetCore.Identity.SQLServer;
 
 namespace MvcWeb
 {
@@ -32,12 +32,6 @@ namespace MvcWeb
             // Service setup
             services.AddPiranha(options =>
             {
-                /**
-                 * This will enable automatic reload of .cshtml
-                 * without restarting the application. However since
-                 * this adds a slight overhead it should not be
-                 * enabled in production.
-                 */
                 options.AddRazorRuntimeCompilation = true;
 
                 options.UseCms();
@@ -49,8 +43,8 @@ namespace MvcWeb
                 options.UseMemoryCache();
 
                 var connectionString = _config.GetConnectionString("piranha");
-                options.UseEF<SQLiteDb>(db => db.UseSqlite(connectionString));
-                options.UseIdentityWithSeed<IdentitySQLiteDb>(db => db.UseSqlite(connectionString));
+                options.UseEF<SQLServerDb>(db => db.UseSqlServer(connectionString));
+                options.UseIdentityWithSeed<IdentitySQLServerDb>(db => db.UseSqlServer(connectionString));
 
                 /**
                  * Here you can configure the different permissions
